@@ -23,7 +23,7 @@ def R2Score(y, y_tilde):
 
 # Mean absolute error
 def MAE(y, y_tilde):
-    sum(abs(y - y_tilde))/float(y.size)
+    return sum(abs(y - y_tilde))/float(y.size)
 
 
 # the Franke function, f:R^2 -> R 
@@ -95,11 +95,11 @@ def Bootstrap(n, k, s, lmb, B):
 
 
     # split data in to training data and test data
-    train_x = spl_x[:n/2,:]
-    train_y = spl_y[:n/2]
+    train_x = spl_x[:int(n/2),:]
+    train_y = spl_y[:int(n/2)]
 
-    test_x = spl_x[n/2:,:]
-    test_y = spl_y[n/2:]
+    test_x = spl_x[int(n/2):,:]
+    test_y = spl_y[int(n/2):]
 
     # compute regression coefficients
     #beta = RidgeReg(train_x, train_y, k, lmb)
