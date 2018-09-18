@@ -80,6 +80,10 @@ def RidgeReg(x, y, k, lmb):
     return beta
 
 
+def LassoeReg(x, y, k, lmb):
+    return beta = 0
+
+
 # create n sample data points
 def CreateSampleData(n, s):
     x = np.random.rand(n, 2)
