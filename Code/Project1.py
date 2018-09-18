@@ -4,6 +4,7 @@ from matplotlib import cm
 from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
+from sklearn import linear_model
 
 
 # Residual squared ...
@@ -77,6 +78,27 @@ def RidgeReg(x, y, k, lmb):
     # compute linear regression coefficients
     beta = np.linalg.inv(X.T.dot(X) + lmb*np.identity(n)).dot(X.T).dot(y)
 
+    return beta
+
+def LassoReg(x, y, k, lmb):
+    # calculate the dimensions of the design matrix
+    m = x.shape[0]
+    n = SumOneToN(k + 1)
+
+    # allocate design matrix
+    X = np.ones((m, n))
+
+    # compute values of design matrix
+    for i in range(m):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p+1-j)*x[i][1]**j
+
+    #compute lasso-coefficients using scikitlearn
+    lasso = linear_model.Lasso(alpha=lmb)
+    lasso.fit(X, y)
+    beta = lasso.coef_
+    
     return beta
 
 
@@ -159,11 +181,13 @@ def plot_function(k, beta):
 
     plt.show()
 
-
-#Mikael-test for å sjekke programmet
+# Test of LassoReg compared to RSS which is Ridge with lambda = 0
 x, y = CreateSampleData(100, 1)
-beta = RidgeReg(x, y, 5, 0)
-plot_function(5, beta)
+betaL = LassoReg(x, y, 5, 1e-10)
+betaR = RidgeReg(x, y, 5, 0.0)
+plot_function(5, betaL)
+plot_function(5, betaR)
+
 # Program
 n = 100 # number of datapoints in sample data set
 k = 5 # the order of your fit-polynomial
