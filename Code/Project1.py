@@ -23,22 +23,22 @@ def R2Score(y, y_tilde):
 
 # Mean absolute error
 def MAE(y, y_tilde):
-    sum(abs(y - y_tilde))/float(y.size)
+    return sum(abs(y - y_tilde))/float(y.size)
 
 
-# the Franke function, f:R^2 -> R 
+# the Franke function, f:R^2 -> R
 def FrankeFunction(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
     term2 = 0.75*np.exp(-((9*x+1)**2)/49.0 - 0.1*(9*y+1))
     term3 = 0.5*np.exp(-(9*x-7)**2/4.0 - 0.25*((9*y-3)**2))
     term4 = -0.2*np.exp(-(9*x-4)**2 - (9*y-7)**2)
-    
+
     return term1 + term2 + term3 + term4
 
 
 # sums up the n first numbers of N
 def SumOneToN(n):
-    return (n + 1)*n/2
+    return int((n + 1)*n/2)
 
 
 # k-th order polynomial
@@ -58,7 +58,7 @@ def Polynome(x, y, k, beta):
         return z
 
 
-# Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y 
+# Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
 # using Ridge regression
 def RidgeReg(x, y, k, lmb):
     # calculate the dimensions of the design matrix
@@ -73,7 +73,7 @@ def RidgeReg(x, y, k, lmb):
         for p in range(k):
             for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
                 X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p+1-j)*x[i][1]**j
-    
+
     # compute linear regression coefficients
     beta = np.linalg.inv(X.T.dot(X) + lmb*np.identity(n)).dot(X.T).dot(y)
 
@@ -84,8 +84,9 @@ def RidgeReg(x, y, k, lmb):
 def CreateSampleData(n, s):
     x = np.random.rand(n, 2)
     y = FrankeFunction(x[:,0], x[:,1]) + s*np.random.randn(n)
-    
+
     return x, y
+
 
 
 # Bootstrap with B resamples
@@ -95,20 +96,21 @@ def Bootstrap(n, k, s, lmb, B):
 
 
     # split data in to training data and test data
+    """
     train_x = spl_x[:n/2,:]
     train_y = spl_y[:n/2]
 
     test_x = spl_x[n/2:,:]
     test_y = spl_y[n/2:]
-
+    """
     # compute regression coefficients
     #beta = RidgeReg(train_x, train_y, k, lmb)
 
     # plot
     #plot_function(k, beta)
-    
+
     # Bootstrap
-    
+
     """
     boots = np.zeros((train_y.size,3))
     print(boots.shape)
@@ -119,16 +121,16 @@ def Bootstrap(n, k, s, lmb, B):
     print(boots)
     """
 
-    for b in range(B):
+    #for b in range(B):
         # draw with replacement from training data
-        boots_x = np.random.choice(train_y, len(train_y))
-        
+        #boots_x = np.random.choice(train_y, len(train_y))
+
         # compute regression coefficients
         #beta = RidgeReg(boots_x, boots_y, k, lmb)
 
         # plot
         #plot_function(k, beta)
-     
+
 
 # plot the fuitted function, TO BE REMOVED
 def plot_function(k, beta):
@@ -157,8 +159,11 @@ def plot_function(k, beta):
 
     plt.show()
 
-    
 
+
+x, y = CreateSampleData(100, 1)
+beta = RidgeReg(x, y, 5, 0)
+plot_function(5, beta)
 # Program
 n = 100 # number of datapoints in sample data set
 k = 5 # the order of your fit-polynomial
