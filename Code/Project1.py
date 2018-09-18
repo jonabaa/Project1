@@ -160,7 +160,7 @@ def plot_function(k, beta):
     plt.show()
 
 
-
+#Mikael-test for å sjekke programmet
 x, y = CreateSampleData(100, 1)
 beta = RidgeReg(x, y, 5, 0)
 plot_function(5, beta)
