@@ -80,6 +80,7 @@ def RidgeReg(x, y, k, lmb):
 
     return beta
 
+
 def LassoReg(x, y, k, lmb):
     # calculate the dimensions of the design matrix
     m = x.shape[0]
@@ -102,10 +103,6 @@ def LassoReg(x, y, k, lmb):
     return beta
 
 
-def LassoeReg(x, y, k, lmb):
-    return beta = 0
-
-
 # create n sample data points
 def CreateSampleData(n, s):
     x = np.random.rand(n, 2)
@@ -116,7 +113,37 @@ def CreateSampleData(n, s):
 
 
 # Bootstrap with B resamples
-def Bootstrap(n, k, s, lmb, B):
+#
+# s = sample data
+# f = Regressionfunction ((RidgeRwg or LassoReg)
+# k = order of polynomial to fit
+# lmb = lambda (set to 0 for OLS-regression)
+# p = parameter estimator function
+# B = number of bootstrap-samples
+# 
+def Bootstrap(x, f, k, lmb, p, B):
+
+    for b in range(B):
+        # draw a random sample with replacement
+        np.random.choice(s, s.shape[0])
+
+        # compute model
+        x = s[:,0:2]
+        y = s[:,2]
+        beta = f(x, y, k, lmb)
+
+        # compute y_tilde
+        y_tilde = Polynome(x[:,0], x[:,1], k, beta)
+
+        # compute estimator of parameter
+        estimator[b] = p(y, y_tilde)
+
+    estimator_mean = sum(estiamtor)/B
+
+    return estimator_mean 
+
+    
+    """
     # create sample data
     spl_x, spl_y = CreateSampleData(n, s)
 
@@ -136,7 +163,7 @@ def Bootstrap(n, k, s, lmb, B):
     #plot_function(k, beta)
 
     # Bootstrap
-
+    """
     """
     boots = np.zeros((train_y.size,3))
     print(boots.shape)
@@ -158,7 +185,11 @@ def Bootstrap(n, k, s, lmb, B):
         #plot_function(k, beta)
 
 
-# plot the fuitted function, TO BE REMOVED
+# plot the fitted function, TO BE REMOVED
+#
+# k = order of polynome
+# beta = coefficients of polynome in ascending order
+#
 def plot_function(k, beta):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
@@ -185,6 +216,7 @@ def plot_function(k, beta):
 
     plt.show()
 
+
 # Test of LassoReg compared to RSS which is Ridge with lambda = 0
 x, y = CreateSampleData(100, 1)
 betaL = LassoReg(x, y, 5, 1e-10)
@@ -192,13 +224,13 @@ betaR = RidgeReg(x, y, 5, 0.0)
 plot_function(5, betaL)
 plot_function(5, betaR)
 
+
 # Program
 n = 100 # number of datapoints in sample data set
 k = 5 # the order of your fit-polynomial
 s = .1 # the noice coefficient
 lmb = 0 # lambda determining the emphasize on minimizing beta vs cost-f.
 
-Bootstrap(n, k, s, lmb, 10)
 
 
 """
