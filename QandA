@@ -1,0 +1,5 @@
+1. Skal punktene i R² vi genererer z-verdier utifra bare være en unifrom grid 
+eller fordelt som en sannsynlighetsfordelign av noe slag?
+2. Hvilke estimatorer/parametre skal vi regne ut for hver bootstrapsample?
+3. " Evaluate also the bias and variance of the final models using for example equation (7.9) in the textbook of Hastie et al." 
+What does this mean?
