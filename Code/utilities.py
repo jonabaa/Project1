@@ -98,7 +98,7 @@ def LassoReg(x, y, k, lmb):
     lasso = linear_model.Lasso(alpha=lmb)
     lasso.fit(X, y)
     beta = lasso.coef_
-    
+
     return beta
 
 
@@ -113,45 +113,7 @@ def CreateSampleData(n, s):
 
 # Bootstrap with B resamples
 def Bootstrap(n, k, s, lmb, B):
-    # create sample data
-    spl_x, spl_y = CreateSampleData(n, s)
-
-
-    # split data in to training data and test data
-
-    train_x = spl_x[:int(n/2),:]
-    train_y = spl_y[:int(n/2)]
-
-    test_x = spl_x[int(n/2):,:]
-    test_y = spl_y[int(n/2):]
     
-    # compute regression coefficients
-    #beta = RidgeReg(train_x, train_y, k, lmb)
-
-    # plot
-    #plot_function(k, beta)
-
-    # Bootstrap
-
-    """
-    boots = np.zeros((train_y.size,3))
-    print(boots.shape)
-    print (train_x.shape)
-    boots[:][0:2] = train_x
-    boots[:][2] = train_y
-
-    print(boots)
-    """
-
-    #for b in range(B):
-        # draw with replacement from training data
-        #boots_x = np.random.choice(train_y, len(train_y))
-
-        # compute regression coefficients
-        #beta = RidgeReg(boots_x, boots_y, k, lmb)
-
-        # plot
-        #plot_function(k, beta)
 
 
 # plot the fuitted function, TO BE REMOVED
@@ -180,51 +142,3 @@ def plot_function(k, beta):
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
     plt.show()
-
-# Test of LassoReg compared to RSS which is Ridge with lambda = 0
-x, y = CreateSampleData(100, 1)
-betaL = LassoReg(x, y, 5, 1e-10)
-betaR = RidgeReg(x, y, 5, 0.0)
-plot_function(5, betaL)
-plot_function(5, betaR)
-
-# Program
-n = 100 # number of datapoints in sample data set
-k = 5 # the order of your fit-polynomial
-s = .1 # the noice coefficient
-lmb = 0 # lambda determining the emphasize on minimizing beta vs cost-f.
-
-Bootstrap(n, k, s, lmb, 10)
-
-
-"""
-# compute and print some statistic measures
-mod_y = Polynome(spl_x[:,0], spl_x[:,1], k, beta)
-print("The R2-score: %.5f." % R2Score(spl_y, mod_y))
-print("The Mean squared error: %.5f." % MSE(spl_y, mod_y))
-"""
-"""
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-
-# Make data.
-x = np.arange(0, 1, 0.05)
-y = np.arange(0, 1, 0.05)
-x, y = np.meshgrid(x,y)
-
-z = FrankeFunction(x, y)
-
-# Plot the surface.
-surf = ax.plot_surface(x, y, z, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
-
-# Customize the z axis.
-ax.set_zlim(-0.10, 1.40)
-ax.zaxis.set_major_locator(LinearLocator(10))
-ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
-# Add a color bar which maps values to colors.
-fig.colorbar(surf, shrink=0.5, aspect=5)
-
-plt.show()
-"""
