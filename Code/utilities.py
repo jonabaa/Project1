@@ -113,7 +113,7 @@ def CreateSampleData(n, s):
 
 # Bootstrap with B resamples
 def Bootstrap(n, k, s, lmb, B):
-    
+    return 0
 
 
 # plot the fuitted function, TO BE REMOVED
