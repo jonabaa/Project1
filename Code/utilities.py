@@ -150,25 +150,31 @@ def Bootstrap(s, f, k, lmb, p, B):
 
     return estimator_mean
 
-def tifread(filename='data_files/SRTM_data_Norway_1.tif'):
+def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
     im = imread(filename)
     #im = np.array([[1,3],[2,4]])
     m, n = im.shape
+    if m < mlimit:
+        print("Decrease mlimit")
+        return None, None
+    if n < nlimit:
+        print("Decrease nlimit")
+        return None, None
 
-    x = np.zeros((m*n, 2))
-    y = np.zeros((m*n, 1))
+    x = np.zeros((mlimit*nlimit, 2))
+    y = np.zeros((mlimit*nlimit, 1))
 
     # Seperate x1 and x2 in coloumns in x and the
     # corresponding values in y
 
     # Make x all combinations of the axis and y corresponds in value
-    for i in range(0, m):
-        for j in range(0, n):
-            x[i + j*m][0] = i
-            x[i+ j*m][1] = j
+    for i in range(0, mlimit):
+        for j in range(0, nlimit):
+            x[i + j*mlimit][0] = i
+            x[i+ j*mlimit][1] = j
 
-            y[i+ j*m] = im[i][j]
+            y[i+ j*mlimit] = im[i][j]
 
 
     # x and y can be used in the regression-functions
@@ -181,12 +187,12 @@ def tifread(filename='data_files/SRTM_data_Norway_1.tif'):
 # k = order of polynome
 # beta = coefficients of polynome in ascending order
 #
-def plot_function(k, beta):
+def plot_function(k, beta, m, n):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
 
-    x1 = np.arange(0, 1, 0.05)
-    x2 = np.arange(0, 1, 0.05)
+    x1 = np.arange(0, m, 0.1)
+    x2 = np.arange(0, n, 0.1)
     x1, x2 = np.meshgrid(x1,x2)
 
     y = Polynome(x1, x2, k, beta)
@@ -198,7 +204,7 @@ def plot_function(k, beta):
     #                       linewidth=0, antialiased=False)
 
     # Customize the z axis.
-    ax.set_zlim(-0.10, 1.40)
+    #ax.set_zlim(-0.10, 1.40)                   #Tar bort limits, skal teste tif-filen
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
@@ -206,7 +212,3 @@ def plot_function(k, beta):
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
     plt.show()
-
-x, y = tifread()
-lbeta = LassoReg(x, y, 5, 1e-15)
-plot_function(5, lbeta)
