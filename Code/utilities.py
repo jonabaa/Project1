@@ -153,6 +153,7 @@ def Bootstrap(s, f, k, lmb, p, B):
 def tifread(filename='data_files/SRTM_data_Norway_1.tif'):
     # Sets default to SRTM data Norway 1
     im = imread(filename)
+    #im = np.array([[1,3],[2,4]])
     m, n = im.shape
 
     x = np.zeros((m*n, 2))
@@ -161,21 +162,18 @@ def tifread(filename='data_files/SRTM_data_Norway_1.tif'):
     # Seperate x1 and x2 in coloumns in x and the
     # corresponding values in y
 
-    # Make x all combinations of the axis
+    # Make x all combinations of the axis and y corresponds in value
     for i in range(0, m):
         for j in range(0, n):
-            x[i+j][0] = i
-            x[i+j][1] = j
-            #print(x[i+j])
+            x[i + j*m][0] = i
+            x[i+ j*m][1] = j
 
-            # Doesn't function properly, doesn't fill in values at the end
+            y[i+ j*m] = im[i][j]
 
 
     # x and y can be used in the regression-functions
     return x, y
 
-x, y = tifread()
-print(x)
 
 
 # plot the fitted function, TO BE REMOVED
@@ -208,3 +206,7 @@ def plot_function(k, beta):
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
     plt.show()
+
+x, y = tifread()
+lbeta = LassoReg(x, y, 5, 1e-15)
+plot_function(5, lbeta)
