@@ -19,6 +19,12 @@ plt.show()
 """
 
 m, n = 100, 100
-x, y = tifread(mlimit=m, nlimit=n)
-lbeta = LassoReg(x, y, 5, 0.1)
-plot_function(5, lbeta, m, n)
+x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
+rbeta1 = RidgeReg(x, y, 5, 1)
+plot_function_2D(5, rbeta1, m, n, 'k5RidgeLambda1')
+
+lbeta1 = LassoReg(x, y, 5, 1)
+plot_function_2D(5, lbeta1, m, n, 'k5LassoLambda1')
+
+rbeta0 = RidgeReg(x, y, 5, 0)
+plot_function_2D(5, rbeta0, m, n, 'k5OLS')

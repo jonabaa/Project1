@@ -153,7 +153,6 @@ def Bootstrap(s, f, k, lmb, p, B):
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
     im = imread(filename)
-    #im = np.array([[1,3],[2,4]])
     m, n = im.shape
     if m < mlimit:
         print("Decrease mlimit")
@@ -187,7 +186,8 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
 # k = order of polynome
 # beta = coefficients of polynome in ascending order
 #
-def plot_function(k, beta, m, n):
+def plot_function_3D(k, beta, m, n):
+    # Plots the figure in 3D
     fig = plt.figure()
     ax = fig.gca(projection='3d')
 
@@ -211,4 +211,22 @@ def plot_function(k, beta, m, n):
     # Add a color bar which maps values to colors.
     fig.colorbar(surf, shrink=0.5, aspect=5)
 
+    plt.show()
+
+def plot_function_2D(k, beta, m, n, navn):
+    # Plots the figure in 2D
+    x1 = np.arange(0, m, 0.1)
+    x2 = np.arange(0, n, 0.1)
+
+    x1, x2 = np.meshgrid(x1, x2)
+
+    y = Polynome(x1, x2, k, beta)
+
+    fig = plt.figure()
+    plt.pcolormesh(x1, x2 ,y , cmap='inferno')
+    plt.colorbar()
+    plt.title('Plot of model')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    fig.savefig('figs/%s2D.png'%(navn), dpi=fig.dpi)
     plt.show()
