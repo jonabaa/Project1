@@ -5,6 +5,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
 from sklearn import linear_model
+from imageio import imread
 
 
 # Residual squared ...
@@ -101,7 +102,7 @@ def LassoReg(x, y, k, lmb):
     lasso = linear_model.Lasso(alpha=lmb)
     lasso.fit(X, y)
     beta = lasso.coef_
-    
+
     return beta
 
 
@@ -122,7 +123,7 @@ def CreateSampleData(n, s):
 # lmb = lambda (set to 0 for OLS-regression)
 # p = list of parameter estimator functions
 # B = number of bootstrap-samples
-# 
+#
 def Bootstrap(s, f, k, lmb, p, B):
     # allocate arrays for storing bootstrap estimators
     bootstrap_estimator = np.zeros((len(p), B))
@@ -143,11 +144,36 @@ def Bootstrap(s, f, k, lmb, p, B):
         # compute estimators of parameters
         for i in range(len(p)):
             bootstrap_estimator[i,b] = p[i](y, y_tilde)
-    
+
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
-    return estimator_mean 
+    return estimator_mean
+
+def tifread(filename='data_files/SRTM_data_Norway_1.tif'):
+    # Sets default to SRTM data Norway 1
+    im = imread(filename)
+    #im = np.array([[1,3],[2,4]])
+    m, n = im.shape
+
+    x = np.zeros((m*n, 2))
+    y = np.zeros((m*n, 1))
+
+    # Seperate x1 and x2 in coloumns in x and the
+    # corresponding values in y
+
+    # Make x all combinations of the axis and y corresponds in value
+    for i in range(0, m):
+        for j in range(0, n):
+            x[i + j*m][0] = i
+            x[i+ j*m][1] = j
+
+            y[i+ j*m] = im[i][j]
+
+
+    # x and y can be used in the regression-functions
+    return x, y
+
 
 
 # plot the fitted function, TO BE REMOVED
@@ -181,3 +207,6 @@ def plot_function(k, beta):
 
     plt.show()
 
+x, y = tifread()
+lbeta = LassoReg(x, y, 5, 1e-15)
+plot_function(5, lbeta)
