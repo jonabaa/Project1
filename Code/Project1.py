@@ -113,7 +113,6 @@ def CreateSampleData(n, s):
     return x, y
 
 
-
 # Bootstrap with B resamples
 #
 # s = sample data
