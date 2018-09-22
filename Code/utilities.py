@@ -5,6 +5,7 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
 from sklearn import linear_model
+from imageio import imread
 
 
 # Residual squared ...
@@ -101,7 +102,7 @@ def LassoReg(x, y, k, lmb):
     lasso = linear_model.Lasso(alpha=lmb)
     lasso.fit(X, y)
     beta = lasso.coef_
-    
+
     return beta
 
 
@@ -121,7 +122,7 @@ def CreateSampleData(n, s):
 # lmb = lambda (set to 0 for OLS-regression)
 # p = list of parameter estimator functions
 # B = number of bootstrap-samples
-# 
+#
 def Bootstrap(s, f, k, lmb, p, B):
     # allocate arrays for storing bootstrap estimators
     bootstrap_estimator = np.zeros((len(p), B))
@@ -142,11 +143,41 @@ def Bootstrap(s, f, k, lmb, p, B):
         # compute estimators of parameters
         for i in range(len(p)):
             bootstrap_estimator[i,b] = p[i](y, y_tilde)
-    
+
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
-    return estimator_mean 
+    return estimator_mean
+
+def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
+    # Sets default to SRTM data Norway 1
+    im = imread(filename)
+    m, n = im.shape
+    if m < mlimit:
+        print("Decrease mlimit")
+        return None, None
+    if n < nlimit:
+        print("Decrease nlimit")
+        return None, None
+
+    x = np.zeros((mlimit*nlimit, 2))
+    y = np.zeros((mlimit*nlimit, 1))
+
+    # Seperate x1 and x2 in coloumns in x and the
+    # corresponding values in y
+
+    # Make x all combinations of the axis and y corresponds in value
+    for i in range(0, mlimit):
+        for j in range(0, nlimit):
+            x[i + j*mlimit][0] = i
+            x[i+ j*mlimit][1] = j
+
+            y[i+ j*mlimit] = im[i][j]
+
+
+    # x and y can be used in the regression-functions
+    return x, y
+
 
 
 # plot the fitted function, TO BE REMOVED
@@ -154,12 +185,13 @@ def Bootstrap(s, f, k, lmb, p, B):
 # k = order of polynome
 # beta = coefficients of polynome in ascending order
 #
-def plot_function(k, beta):
+def plot_function_3D(k, beta, m, n):
+    # Plots the figure in 3D
     fig = plt.figure()
     ax = fig.gca(projection='3d')
 
-    x1 = np.arange(0, 1, 0.05)
-    x2 = np.arange(0, 1, 0.05)
+    x1 = np.arange(0, m, 0.1)
+    x2 = np.arange(0, n, 0.1)
     x1, x2 = np.meshgrid(x1,x2)
 
     y = Polynome(x1, x2, k, beta)
@@ -171,7 +203,7 @@ def plot_function(k, beta):
     #                       linewidth=0, antialiased=False)
 
     # Customize the z axis.
-    ax.set_zlim(-0.10, 1.40)
+    #ax.set_zlim(-0.10, 1.40)                   #Tar bort limits, skal teste tif-filen
     ax.zaxis.set_major_locator(LinearLocator(10))
     ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 
@@ -180,3 +212,20 @@ def plot_function(k, beta):
 
     plt.show()
 
+def plot_function_2D(k, beta, m, n, navn):
+    # Plots the figure in 2D
+    x1 = np.arange(0, m, 0.1)
+    x2 = np.arange(0, n, 0.1)
+
+    x1, x2 = np.meshgrid(x1, x2)
+
+    y = Polynome(x1, x2, k, beta)
+
+    fig = plt.figure()
+    plt.pcolormesh(x1, x2 ,y , cmap='inferno')
+    plt.colorbar()
+    plt.title('Plot of model')
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    fig.savefig('figs/%s2D.png'%(navn), dpi=fig.dpi)
+    plt.show()
