@@ -15,17 +15,21 @@ def RSS(y, y_tilde):
 
 # Mean squared error
 def MSE(y, y_tilde):
-    return RSS(y, y_tilde)*(1/float(y.size))
+    return RSS(y, y_tilde)*(1/y.size)
 
 
 # R2-score function
 def R2Score(y, y_tilde):
-    return 1 - RSS(y, y_tilde)/sum((y - sum(y)/float(y.size))**2)
+    return 1 - RSS(y, y_tilde)/sum((y - sum(y)/y.size))**2
 
 
 # Mean absolute error
 def MAE(y, y_tilde):
-    return sum(abs(y - y_tilde))/float(y.size)
+    return sum(abs(y - y_tilde))/y.size
+
+# Mean of the vector y
+def Mean(y):
+    return sum(y)/len(y)
 
 
 # the Franke function, f:R^2 -> R
@@ -111,7 +115,7 @@ def CreateSampleData(n, s):
     x = np.random.rand(n, 2)
     y = FrankeFunction(x[:,0:1], x[:,1:2])# + s*np.random.randn((n,1))
 
-    return x, y
+    return np.concatenate([x, y], axis=1)
 
 
 # Bootstrap with B resamples
@@ -126,7 +130,6 @@ def CreateSampleData(n, s):
 def Bootstrap(s, f, k, lmb, p, B):
     # allocate arrays for storing bootstrap estimators
     bootstrap_estimator = np.zeros((len(p), B))
-    #bootstrap_estimator_mean = np.zeros((len(p),))
 
     for b in range(B):
         # draw a random bootstrap sample with replacement
@@ -134,11 +137,14 @@ def Bootstrap(s, f, k, lmb, p, B):
 
         # compute model
         x = bs_s[:,0:2]
-        y = bs_s[:,2]
+        y = bs_s[:,2:3]
         beta = f(x, y, k, lmb)
 
         # compute y_tilde
+        #if 0==0:
         y_tilde = Polynome(x[:,0], x[:,1], k, beta)
+        #else:
+            #y_tilde = np.concatenate([y_tilde, Polynome(x[:,0], x[:,1], k, beta)], axis=1)
 
         # compute estimators of parameters
         for i in range(len(p)):
@@ -147,7 +153,14 @@ def Bootstrap(s, f, k, lmb, p, B):
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
+    # compute the bias
+    
+    # compute the varians 
+    #mean = (np.sum(y_tilde, axis=1)/B).reshape((len(y_tilde), 1)) 
+    #var = np.sum(np.sum((y_tilde - mean)**2)/B)  
+
     return estimator_mean
+
 
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
