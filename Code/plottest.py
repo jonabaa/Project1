@@ -28,3 +28,6 @@ plot_function_2D(5, lbeta1, m, n, 'k5LassoLambda1')
 
 rbeta0 = RidgeReg(x, y, 5, 0)
 plot_function_2D(5, rbeta0, m, n, 'k5OLS')
+
+rbeta5 = RidgeReg(x, y, 5, 5)
+plot_function_2D(5, rbeta5, m, n, 'k5RidgeLambda5')
