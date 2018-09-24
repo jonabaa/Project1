@@ -228,5 +228,5 @@ def plot_function_2D(k, beta, m, n, navn):
     plt.title('Plot of model')
     plt.xlabel('X')
     plt.ylabel('Y')
-    fig.savefig('figs/%s2D.png'%(navn), dpi=fig.dpi)
+    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
