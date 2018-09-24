@@ -215,8 +215,8 @@ def plot_function_3D(k, beta, m, n):
 
 def plot_function_2D(k, beta, m, n, navn):
     # Plots the figure in 2D
-    x1 = np.arange(0, m, 0.1)
-    x2 = np.arange(0, n, 0.1)
+    x1 = np.arange(0, m, 0.05)
+    x2 = np.arange(0, n, 0.05)
 
     x1, x2 = np.meshgrid(x1, x2)
 
