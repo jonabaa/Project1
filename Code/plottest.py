@@ -21,7 +21,7 @@ plt.show()
 m, n = 250, 250
 x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 
-plot_realdata(x, y)
+plot_realdata(x, y, '250x250nor2')
 obetareal = RidgeReg(x, y, 10, 0)
 plot_function_2D(10, obetareal, m, n, '250x250OLSdegree10')
 """
