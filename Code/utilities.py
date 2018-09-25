@@ -171,12 +171,12 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
     for i in range(0, mlimit):
         for j in range(0, nlimit):
             x[i + j*mlimit][0] = i
-            x[i+ j*mlimit][1] = j
+            x[i + j*mlimit][1] = j
 
-            y[i+ j*mlimit] = im[i][j]
+            y[i + j*mlimit] = im[i][j]
 
 
-    # x and y can be used in the regression-functions
+    # x and y can be used in the regression-function
     return x, y
 
 
@@ -213,20 +213,38 @@ def plot_function_3D(k, beta, m, n):
 
     plt.show()
 
+# Plots the in the wrong axis
 def plot_function_2D(k, beta, m, n, navn):
     # Plots the figure in 2D
-    x1 = np.arange(0, m, 0.1)
-    x2 = np.arange(0, n, 0.1)
+    x1 = np.arange(0, m, 0.05)
+    x2 = np.arange(0, n, 0.05)
 
-    x1, x2 = np.meshgrid(x1, x2)
+    x2, x1 = np.meshgrid(x1, x2)
 
-    y = Polynome(x1, x2, k, beta)
+    y = Polynome(x1, x2, k, beta).T
+    y1 = np.flip(y, axis=1)
 
     fig = plt.figure()
-    plt.pcolormesh(x1, x2 ,y , cmap='inferno')
+    plt.pcolormesh(x1, x2 ,y1, cmap='inferno')
     plt.colorbar()
     plt.title('Plot of model')
     plt.xlabel('X')
     plt.ylabel('Y')
     fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    plt.show()
+
+def plot_realdata(x, y):
+    x2 = x[:, 1].reshape((len(x[:,1]), 1))
+    x1 = x[:, 0].reshape((len(x[:,0]), 1))
+
+    N = int(len(y)**0.5)
+    y1 = y.reshape(N, N).T
+    # Transpose the y1 to fit the axis properly
+
+    fig = plt.figure()
+    plt.imshow(y1, extent=(np.amin(x1), np.amax(x1), np.amin(x2), np.amax(x2)), cmap='inferno')
+    plt.colorbar()
+    plt.title('Plot of model')
+    plt.xlabel('X')
+    plt.ylabel('Y')
     plt.show()
