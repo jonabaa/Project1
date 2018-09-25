@@ -313,13 +313,13 @@ def plot_function_2D(k, beta, m, n, navn):
     fig = plt.figure()
     plt.pcolormesh(x1, x2 ,y1, cmap='inferno')
     plt.colorbar()
-    plt.title('Plot of model')
+    plt.title(navn)
     plt.xlabel('X')
     plt.ylabel('Y')
     fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
 
-def plot_realdata(x, y):
+def plot_realdata(x, y, navn):
     x2 = x[:, 1].reshape((len(x[:,1]), 1))
     x1 = x[:, 0].reshape((len(x[:,0]), 1))
 
@@ -330,7 +330,7 @@ def plot_realdata(x, y):
     fig = plt.figure()
     plt.imshow(y1, extent=(np.amin(x1), np.amax(x1), np.amin(x2), np.amax(x2)), cmap='inferno')
     plt.colorbar()
-    plt.title('Plot of model')
+    plt.title(navn)
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.show()
