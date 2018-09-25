@@ -40,13 +40,15 @@ plot_function_2D(5, lbeta1, 1, 1, 'partcLassoLambda001')
 # Part d)-------------------------
 # Introducing real data
 
+# This splits the data into a chunk 100x100 up in the right corner
+m, n = 100, 100
+x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
+plot_realdata(x, y)
+
 # Potentially download own data from website
 # Just get the data represented in variebles
 # and maybe split it up if it's too much
 
-# This splits the data into a chunk 100x100 up in the right corner
-m, n = 100, 100
-x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 
 
 # Part e)-------------------------

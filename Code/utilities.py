@@ -193,10 +193,10 @@ def Bootstrap2(s, f, k, lmb, B):
 
     # compute variance
     var = sum(np.sum((y_tilde_matrix - E_L)**2, axis=1)/B)
-    
+
     # compute bias
     bias = np.sum((y - E_L)**2)
-    
+
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
@@ -272,20 +272,65 @@ def plot_function_3D(k, beta, m, n):
 
     plt.show()
 
+def plot_function_3D(k, beta, m, n):
+    # Plots the figure in 3D
+    fig = plt.figure()
+    ax = fig.gca(projection='3d')
+
+    x1 = np.arange(0, m, 0.1)
+    x2 = np.arange(0, n, 0.1)
+    x1, x2 = np.meshgrid(x1,x2)
+
+    y = Polynome(x1, x2, k, beta)
+
+    # Plot the surface.
+    surf = ax.plot_surface(x1, x2, y, cmap=cm.coolwarm,
+                        linewidth=0, antialiased=False)
+    #surf2 = ax.plot_surface(x1, x2, y_f, cmap=cm.coolwarm,
+    #                       linewidth=0, antialiased=False)
+
+    # Customize the z axis.
+    #ax.set_zlim(-0.10, 1.40)                   #Tar bort limits, skal teste tif-filen
+    ax.zaxis.set_major_locator(LinearLocator(10))
+    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
+
+    # Add a color bar which maps values to colors.
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+
+    plt.show()
+
+# Plots the in the wrong axis
 def plot_function_2D(k, beta, m, n, navn):
     # Plots the figure in 2D
     x1 = np.arange(0, m, 0.05)
     x2 = np.arange(0, n, 0.05)
 
-    x1, x2 = np.meshgrid(x1, x2)
+    x2, x1 = np.meshgrid(x1, x2)
 
-    y = Polynome(x1, x2, k, beta)
+    y = Polynome(x1, x2, k, beta).T
+    y1 = np.flip(y, axis=1)
 
     fig = plt.figure()
-    plt.pcolormesh(x1, x2 ,y , cmap='inferno')
+    plt.pcolormesh(x1, x2 ,y1, cmap='inferno')
     plt.colorbar()
     plt.title('Plot of model')
     plt.xlabel('X')
     plt.ylabel('Y')
     fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    plt.show()
+
+def plot_realdata(x, y):
+    x2 = x[:, 1].reshape((len(x[:,1]), 1))
+    x1 = x[:, 0].reshape((len(x[:,0]), 1))
+
+    N = int(len(y)**0.5)
+    y1 = y.reshape(N, N).T
+    # Transpose the y1 to fit the axis properly
+
+    fig = plt.figure()
+    plt.imshow(y1, extent=(np.amin(x1), np.amax(x1), np.amin(x2), np.amax(x2)), cmap='inferno')
+    plt.colorbar()
+    plt.title('Plot of model')
+    plt.xlabel('X')
+    plt.ylabel('Y')
     plt.show()
