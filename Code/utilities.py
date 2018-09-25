@@ -15,7 +15,7 @@ def RSS(y, y_tilde):
 
 # Mean squared error
 def MSE(y, y_tilde):
-    return RSS(y, y_tilde)*(1/float(y.size))
+    return RSS(y, y_tilde)*(1/len(y))
 
 
 # R2-score function
@@ -114,7 +114,6 @@ def CreateSampleData(n, s):
     return x, y
 
 
-
 # Bootstrap with B resamples
 #
 # s = sample data
@@ -127,7 +126,6 @@ def CreateSampleData(n, s):
 def Bootstrap(s, f, k, lmb, p, B):
     # allocate arrays for storing bootstrap estimators
     bootstrap_estimator = np.zeros((len(p), B))
-    #bootstrap_estimator_mean = np.zeros((len(p),))
 
     for b in range(B):
         # draw a random bootstrap sample with replacement
@@ -149,6 +147,67 @@ def Bootstrap(s, f, k, lmb, p, B):
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
     return estimator_mean
+
+
+# Bootstrap with B resamples
+#
+# s = sample data
+# f = Regressionfunction ((RidgeRwg or LassoReg)
+# k = order of polynomial for regression function to fit
+# lmb = lambda (set to 0 for OLS-regression)
+# B = number of bootstrap-samples
+#
+def Bootstrap2(s, f, k, lmb, B):
+    # allocate arrays for storing bootstrap estimators
+    bootstrap_estimator = np.zeros((2, B))
+    #bootstrap_estimator_mean = np.zeros((len(p),))
+
+    for b in range(B):
+        # draw a random bootstrap sample with replacement
+        bs_s = s[np.random.choice(s.shape[0], s.shape[0]),:]
+
+        # compute model
+        x = bs_s[:,0:2]
+        y = bs_s[:,2]
+        beta = f(x, y, k, lmb)
+
+        # compute y_tilde
+        y_tilde = Polynome(x[:,0:1], x[:,1:2], k, beta)
+        if b == 0:
+            y_tilde_matrix = y_tilde
+        else:
+            y_tilde_matrix = np.concatenate([y_tilde_matrix, y_tilde], axis=1)
+        # compute estimators of parameters
+        bootstrap_estimator[0,b] = MSE(y, y_tilde_matrix[:,b])
+        bootstrap_estimator[1,b] = R2Score(y, y_tilde_matrix[:,b])
+    """
+    # compute variance
+    for b in range(B):
+        y_tilde_matrix[:,b] = (y_tilde_matrix[:,b] - np.sum(y_tilde_matrix, axis=1)/B)**2
+    var = np.sum(y_tilde_matrix, axis=1)/B
+    var = sum(var)
+    print(var)
+    """
+    #compute expected value in x over the bootstrapsamples
+    E_L = (np.sum(y_tilde_matrix, axis=1)/B).reshape((len(y_tilde),1))
+
+    # compute variance
+    var = sum(np.sum((y_tilde_matrix - E_L)**2, axis=1)/B)
+    
+    # compute bias
+    bias = np.sum((y - E_L)**2)
+    
+    # compute bootstrap mean of estimators
+    estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
+
+    # do some printing for test purposes
+    print("VAR: %f.2." % var)
+    print("BIAS: %f.2." % bias)
+    print("Bootstrap mean of MSE: %f.2." % estimator_mean[0])
+    print("Bootstrap mean of r2Score: %f.2." % estimator_mean[1])
+
+    return estimator_mean
+
 
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
