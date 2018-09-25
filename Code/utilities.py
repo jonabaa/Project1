@@ -180,20 +180,31 @@ def Bootstrap2(s, f, k, lmb, B):
         # compute estimators of parameters
         bootstrap_estimator[0,b] = MSE(y, y_tilde_matrix[:,b])
         bootstrap_estimator[1,b] = R2Score(y, y_tilde_matrix[:,b])
-    
+    """
     # compute variance
     for b in range(B):
         y_tilde_matrix[:,b] = (y_tilde_matrix[:,b] - np.sum(y_tilde_matrix, axis=1)/B)**2
     var = np.sum(y_tilde_matrix, axis=1)/B
     var = sum(var)
     print(var)
+    """
+    #compute expected value in x over the bootstrapsamples
+    E_L = (np.sum(y_tilde_matrix, axis=1)/B).reshape((len(y_tilde),1))
+
+    # compute variance
+    var = sum(np.sum((y_tilde_matrix - E_L)**2, axis=1)/B)
     
     # compute bias
-    bias = sum((y - np.sum(y_tilde_matrix, axis=1)/B)**2)
-    print(bias)
+    bias = np.sum((y - E_L)**2)
     
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
+
+    # do some printing for test purposes
+    print("VAR: %f.2." % var)
+    print("BIAS: %f.2." % bias)
+    print("Bootstrap mean of MSE: %f.2." % estimator_mean[0])
+    print("Bootstrap mean of r2Score: %f.2." % estimator_mean[1])
 
     return estimator_mean
 
