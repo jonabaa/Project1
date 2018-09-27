@@ -14,7 +14,12 @@ from utilities import *
 x, y = CreateSampleData(100, 0.01)
 obeta0 = RidgeReg(x, y, 5, 0)
 # Check values of this with bootstrap
-#plot_function_2D(5, obeta0, 1, 1, 'a-OLS')
+s = np.c_[x, y]
+boots = Bootstrap2(s, RidgeReg, 5, 0, 10)
+
+
+
+plot_function_2D(5, obeta0, 1, 1, 'a-OLS')
 
 
 # Part b)-------------------------
@@ -23,7 +28,7 @@ obeta0 = RidgeReg(x, y, 5, 0)
 
 rbeta1 = RidgeReg(x, y, 5, 0.1)
 # Check values of this with bootstrap
-#plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
+plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
 
 # Part c)-------------------------
 # Lasso Regression on the Franke function
@@ -31,7 +36,7 @@ rbeta1 = RidgeReg(x, y, 5, 0.1)
 
 lbeta1 = LassoReg(x, y, 5, 0.01)
 # Check values of this with bootstrap
-#plot_function_2D(5, lbeta1, 1, 1, 'c-LassoLambda001')
+plot_function_2D(5, lbeta1, 1, 1, 'c-LassoLambda001')
 
 # Discuss which method is best
 # Compare the bootstrap-values etc.
@@ -62,6 +67,5 @@ rbetareal = RidgeReg(x, y, 5, 0.1)
 
 lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
-
 
 # Basicly repeat of a-c just with real data

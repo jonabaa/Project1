@@ -300,7 +300,7 @@ def plot_function_3D(k, beta, m, n):
     plt.show()
 
 # Plots the in the wrong axis
-def plot_function_2D(k, beta, m, n, navn):
+def plot_function_2D(k, beta, m, n, navn, savefig=False):
     # Plots the figure in 2D
     x1 = np.arange(0, m, 0.05)
     x2 = np.arange(0, n, 0.05)
@@ -316,10 +316,11 @@ def plot_function_2D(k, beta, m, n, navn):
     plt.title(navn)
     plt.xlabel('X')
     plt.ylabel('Y')
-    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    if savefig:
+        fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
 
-def plot_realdata(x, y, navn):
+def plot_realdata(x, y, navn, savefig=False):
     x2 = x[:, 1].reshape((len(x[:,1]), 1))
     x1 = x[:, 0].reshape((len(x[:,0]), 1))
 
@@ -333,5 +334,6 @@ def plot_realdata(x, y, navn):
     plt.title(navn)
     plt.xlabel('X')
     plt.ylabel('Y')
-    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    if savefig:
+        fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
