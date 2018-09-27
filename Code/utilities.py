@@ -333,4 +333,5 @@ def plot_realdata(x, y, navn):
     plt.title(navn)
     plt.xlabel('X')
     plt.ylabel('Y')
+    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
