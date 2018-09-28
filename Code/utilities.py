@@ -27,6 +27,37 @@ def R2Score(y, y_tilde):
 def MAE(y, y_tilde):
     return sum(abs(y - y_tilde))/float(y.size)
 
+# Variance of beta
+def VAR(x, y, y_tilde, k):
+    # Need to compute
+    # Var(BETA) = (X^T X)^-1 sigma^2
+    # X is the construct matrix
+    # sigma^2 = 1/(N - k - 1) * RSS
+    m = x.shape[0]
+    n = SumOneToN(k + 1)
+
+    # allocate design matrix
+    X = np.ones((m, n))
+
+
+    # compute values of design matrix
+    for i in range(m):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p+1-j)*x[i][1]**j
+
+    varmatrix = np.linalg.inv((X.T.dot(X))) * ((1/(len(y)-k-1))*RSS(y, y_tilde))[0]
+    # varmatrix gets huge on test subjects
+
+    # use [0] at the end since RSS return an array as it stands
+    # the diagonal is the variance, other indexes represents covariances
+    # only want to return the variance
+
+    return np.diagonal(varmatrix)
+
+
+
+
 
 # the Franke function, f:R^2 -> R
 def FrankeFunction(x,y):
@@ -201,15 +232,15 @@ def Bootstrap2(s, f, k, lmb, B):
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
     # do some printing for test purposes
-    """
+
     print("VAR: %f.2." % var)
     print("BIAS: %f.2." % bias)
     print("Bootstrap mean of MSE: %f.2." % estimator_mean[0])
     print("Bootstrap mean of r2Score: %f.2." % estimator_mean[1])
-    """
+
     return estimator_mean
 
-
+# This just reads an mxn block of the input-file
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
     im = imread(filename)
@@ -300,7 +331,6 @@ def plot_function_3D(k, beta, m, n):
 
     plt.show()
 
-# Plots the in the wrong axis
 def plot_function_2D(k, beta, m, n, navn, savefig=False):
     # Plots the figure in 2D
     x1 = np.arange(0, m, 0.05)
@@ -321,6 +351,7 @@ def plot_function_2D(k, beta, m, n, navn, savefig=False):
         fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
 
+# Plots real data to compare
 def plot_realdata(x, y, navn, savefig=False):
     x2 = x[:, 1].reshape((len(x[:,1]), 1))
     x1 = x[:, 0].reshape((len(x[:,0]), 1))
@@ -345,7 +376,7 @@ def plot_realdata(x, y, navn, savefig=False):
 
 def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=False):
 
-    lmbx = np.logspace(-2, 2, lambdasteps)
+    lmbx = np.logspace(-2, 4, lambdasteps)
     r2scores = np.zeros((len(karray), len(lmbx)))
     msescores = np.zeros((len(karray),len(lmbx)))
 
@@ -356,6 +387,8 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
             r2scores[j][i] = r2
             msescores[j][i] = mse
 
+    fig = plt.figure()
+
     for i in range(len(karray)):
         plt.plot(lmbx,r2scores[i], label='degree= %s'%karray[i])
     plt.legend()
@@ -363,8 +396,10 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
     plt.xlabel('lambda')
     plt.xscale('log')
     plt.ylabel('R2')
+    if savefig:
+        fig.savefig('scorefigs/R2%s.png'%(plotname), dpi=fig.dpi)
     plt.show()
-
+    
     for i in range(len(karray)):
         plt.plot(lmbx,msescores[i], label='degree= %s'%karray[i])
     plt.legend()
@@ -372,4 +407,16 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
     plt.xlabel('lambda')
     plt.xscale('log')
     plt.ylabel('MSE')
+    if savefig:
+        fig.savefig('scorefigs/MSE%s.png'%(plotname), dpi=fig.dpi)
     plt.show()
+
+"""
+# Shows that I have not fixed the error in the varfunction
+x, y = CreateSampleData(3, 0.01)
+k = 3
+beta1 = LassoReg(x, y, k, 1)
+y_tilde = Polynome(x, y, k, beta1)
+
+VAR(x, y, y_tilde, k)
+"""

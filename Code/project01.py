@@ -28,7 +28,7 @@ boots = Bootstrap2(s, RidgeReg, 5, 0, 10)
 # with resampling
 
 rbeta1 = RidgeReg(x, y, 5, 0.1)
-#plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
+#plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
 
 
@@ -65,15 +65,15 @@ x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 # OLS, Ridge and Lasso regression with resampling
 
 
-obetareal = RidgeReg(x, y, 5, 0)
+#obetareal = RidgeReg(x, y, 5, 0)
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
-s = np.c_[x, y]
-plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
+#s = np.c_[x, y]
+#plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
-rbetareal = RidgeReg(x, y, 5, 0.1)
+#rbetareal = RidgeReg(x, y, 5, 0.1)
 #plot_function_2D(5, rbetareal, m, n, 'e-Ridge01')
 
-lbetareal = LassoReg(x, y, 5, 0.01)
+#lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
 # Basicly repeat of a-c just with real data
