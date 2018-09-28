@@ -201,11 +201,12 @@ def Bootstrap2(s, f, k, lmb, B):
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
     # do some printing for test purposes
+    """
     print("VAR: %f.2." % var)
     print("BIAS: %f.2." % bias)
     print("Bootstrap mean of MSE: %f.2." % estimator_mean[0])
     print("Bootstrap mean of r2Score: %f.2." % estimator_mean[1])
-
+    """
     return estimator_mean
 
 
@@ -336,4 +337,39 @@ def plot_realdata(x, y, navn, savefig=False):
     plt.ylabel('Y')
     if savefig:
         fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    plt.show()
+
+# Make a function which plots different scores of R2 and MSE
+# First is with same model, but different k-s and lambda
+# Plot R2/MSE by the value of lambda. PLot for different degrees
+
+def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=False):
+
+    lmbx = np.logspace(-2, 2, lambdasteps)
+    r2scores = np.zeros((len(karray), len(lmbx)))
+    msescores = np.zeros((len(karray),len(lmbx)))
+
+    for j in range(len(karray)):
+        for i in range(len(lmbx)):
+            # Will implement for function for each k
+            mse, r2 = Bootstrap2(s, function, karray[j], lmbx[i], 10)
+            r2scores[j][i] = r2
+            msescores[j][i] = mse
+
+    for i in range(len(karray)):
+        plt.plot(lmbx,r2scores[i], label='degree= %s'%karray[i])
+    plt.legend()
+    plt.title('R2 of %s' %plotname)
+    plt.xlabel('lambda')
+    plt.xscale('log')
+    plt.ylabel('R2')
+    plt.show()
+
+    for i in range(len(karray)):
+        plt.plot(lmbx,msescores[i], label='degree= %s'%karray[i])
+    plt.legend()
+    plt.title('MSE of %s' %plotname)
+    plt.xlabel('lambda')
+    plt.xscale('log')
+    plt.ylabel('MSE')
     plt.show()
