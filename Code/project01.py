@@ -16,10 +16,11 @@ obeta0 = RidgeReg(x, y, 5, 0)
 # Check values of this with bootstrap
 s = np.c_[x, y]
 boots = Bootstrap2(s, RidgeReg, 5, 0, 10)
+#
+# Plots different scores with MSE and R2
+#plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
 
-
-
-plot_function_2D(5, obeta0, 1, 1, 'a-OLS')
+#plot_function_2D(5, obeta0, 1, 1, 'a-OLS')
 
 
 # Part b)-------------------------
@@ -27,8 +28,11 @@ plot_function_2D(5, obeta0, 1, 1, 'a-OLS')
 # with resampling
 
 rbeta1 = RidgeReg(x, y, 5, 0.1)
+#plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
-plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
+
+
+#plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
 
 # Part c)-------------------------
 # Lasso Regression on the Franke function
@@ -36,7 +40,9 @@ plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
 
 lbeta1 = LassoReg(x, y, 5, 0.01)
 # Check values of this with bootstrap
-plot_function_2D(5, lbeta1, 1, 1, 'c-LassoLambda001')
+# Plots different scores with MSE and R2
+#plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
+#plot_function_2D(5, lbeta1, 1, 1, 'c-LassoLambda001')
 
 # Discuss which method is best
 # Compare the bootstrap-values etc.
@@ -59,13 +65,15 @@ x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 # OLS, Ridge and Lasso regression with resampling
 
 
-obetareal = RidgeReg(x, y, 5, 0)
+#obetareal = RidgeReg(x, y, 5, 0)
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
+#s = np.c_[x, y]
+#plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
-rbetareal = RidgeReg(x, y, 5, 0.1)
+#rbetareal = RidgeReg(x, y, 5, 0.1)
 #plot_function_2D(5, rbetareal, m, n, 'e-Ridge01')
 
-lbetareal = LassoReg(x, y, 5, 0.01)
+#lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
 # Basicly repeat of a-c just with real data
