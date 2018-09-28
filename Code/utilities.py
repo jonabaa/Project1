@@ -8,7 +8,7 @@ from sklearn import linear_model
 from imageio import imread
 
 
-# Residual squared ...
+# Residual sums squared 
 def RSS(y, y_tilde):
     return sum((y - y_tilde)**2)
 
@@ -61,8 +61,9 @@ def Polynome(x, y, k, beta):
 
 
 # Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
-# using Ridge regression
+# using Ridge regression with lambda=lmb
 def RidgeReg(x, y, k, lmb):
+    print(x.shape)
     # calculate the dimensions of the design matrix
     m = x.shape[0]
     n = SumOneToN(k + 1)
@@ -78,12 +79,14 @@ def RidgeReg(x, y, k, lmb):
 
     # compute linear regression coefficients
     beta = np.linalg.inv(X.T.dot(X) + lmb*np.identity(n)).dot(X.T).dot(y)
-
+    
+    covar_matrix = np.linalg.inv(X.T.dot(X)) #*(sum(y-sum(y)/m)/(x.shape[0] - x.shape[1] -1))
+    
     return beta
 
 
 # Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
-# using Ridge regression
+# using Lasso regression with lambda=lmb
 def LassoReg(x, y, k, lmb):
     # calculate the dimensions of the design matrix
     m = x.shape[0]
@@ -201,12 +204,18 @@ def Bootstrap2(s, f, k, lmb, B):
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
     # do some printing for test purposes
-    print("VAR: %f.2." % var)
-    print("BIAS: %f.2." % bias)
-    print("Bootstrap mean of MSE: %f.2." % estimator_mean[0])
-    print("Bootstrap mean of r2Score: %f.2." % estimator_mean[1])
+    print("VAR: %.4f." % var)
+    print("BIAS: %.4f." % bias)
+    print("Bootstrap mean of MSE: %.4f." % estimator_mean[0])
+    print("Bootstrap mean of r2Score: %.4f." % estimator_mean[1])
 
-    return estimator_mean
+    return_values = np.zeros((4,1))
+    return_values[0] = bias
+    return_values[1] = var
+    return_values[2] = estimator_mean[0]
+    return_values[3] = estimator_mean[1]
+
+    return return_values
 
 
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
@@ -289,3 +298,38 @@ def plot_function_2D(k, beta, m, n, navn):
     plt.ylabel('Y')
     fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
+
+
+# plotting error measures against lambda and k
+def generate_errorplots(RegMethod, K, lmb, B=100):
+    lmb = .1 # lambda 
+    K = 10 # compute for all degress up to K
+
+    x, y = CreateSampleData(500, .1)
+    s = np.concatenate([x,y], axis=1)
+    
+    for k in range(K):
+        if k == 0:
+            return_values = Bootstrap2(s, RegMethod, k, lmb, B)
+        else:
+            return_values = np.concatenate([return_values, Bootstrap2(s, RidgeReg, k, lmb, B)], axis=1)
+
+    x = range(K)
+
+    # save the plots to files
+    filename1 = "OLS-test1"
+    filename2 = "OLS-test2"
+
+    plt.plot(x, return_values[0,:]/1000, label="Bias^2/1000")
+    plt.plot(x, return_values[1,:], label="Var")
+    plt.legend()
+    plt.savefig(filename1)
+    
+    plt.gcf().clear()
+
+    plt.plot(x, return_values[2,:], label="MSE")
+    plt.plot(x, return_values[3,:], label="R2Score")
+    plt.legend()
+    plt.savefig(filename2)
+
+
