@@ -10,7 +10,7 @@ from imageio import imread
 
 # Residual sums squared 
 def RSS(y, y_tilde):
-    return sum((y - y_tilde)**2)
+    return np.sum((y - y_tilde)**2, axis=0)
 
 
 # Mean squared error
@@ -20,12 +20,12 @@ def MSE(y, y_tilde):
 
 # R2-score function
 def R2Score(y, y_tilde):
-    return 1 - RSS(y, y_tilde)/sum((y - sum(y)/float(y.size))**2)
+    return 1 - RSS(y, y_tilde)/np.sum((y - np.sum(y, axis=0)/y.size)**2, axis=0)
 
 
 # Mean absolute error
 def MAE(y, y_tilde):
-    return sum(abs(y - y_tilde))/float(y.size)
+    return np.sum(np.abs(y - y_tilde), axis=1)/y.size
 
 
 # the Franke function, f:R^2 -> R
@@ -43,7 +43,7 @@ def SumOneToN(n):
     return int((n + 1)*n/2)
 
 
-# k-th order polynomial
+# k-th order polynomial DELETE
 def Polynome(x, y, k, beta):
     if beta.size != SumOneToN(k + 1):
         print("Function Polynom says: Bad input data.")
@@ -59,9 +59,9 @@ def Polynome(x, y, k, beta):
 
         return z
 
-
+# DELETE
 # Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
-# using Ridge regression with lambda=lmb
+# using Ridge regression with lambda=lmb 
 def RidgeReg(x, y, k, lmb):
     print(x.shape)
     # calculate the dimensions of the design matrix
