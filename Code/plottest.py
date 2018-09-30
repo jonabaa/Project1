@@ -18,17 +18,17 @@ plt.ylabel('Y')
 plt.show()
 """
 
-m, n = 250, 250
+m, n = 300, 300
 x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 
-plot_realdata(x, y, '250x250nor2')
+#plot_realdata(x, y, '300x300nor2', savefig=True)
+"""
+"""
 obetareal = RidgeReg(x, y, 10, 0)
-plot_function_2D(10, obetareal, m, n, '250x250OLSdegree10')
-"""
+plot_function_2D(10, obetareal, m, n, '300x300OLSdegree10', savefig=True)
 
-lbetareal = LassoReg(x, y, 5, 0.01)
-plot_function_2D(5, lbetareal, m, n, '250x250Lasso1e-2')
-"""
+lbetareal = LassoReg(x, y, 5, 10)
+plot_function_2D(5, lbetareal, m, n, '300x300Lassodegree10', savefig=True)
 
 """
 rbeta1 = RidgeReg(x, y, 5, 1)
