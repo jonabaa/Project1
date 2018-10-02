@@ -6,6 +6,7 @@ import numpy as np
 from random import random, seed
 from sklearn import linear_model
 from imageio import imread
+import scipy.stats as st
 
 
 # Residual squared ...
@@ -46,13 +47,13 @@ def VAR(x, y, y_tilde, k):
             for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
                 X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p+1-j)*x[i][1]**j
 
-    varmatrix = np.linalg.inv((X.T.dot(X))) * ((1/(len(y)-k-1))*RSS(y, y_tilde))[0]
-    # varmatrix gets huge on test subjects
 
-    # use [0] at the end since RSS return an array as it stands
+    varmatrix = np.linalg.inv(((X.T).dot(X))) * ((1/(len(y)-k-1))*RSS(y, y_tilde))
+    # sigma2 = ((1/(len(y)-k-1))*RSS(y, y_tilde))
+
+
     # the diagonal is the variance, other indexes represents covariances
     # only want to return the variance
-
     return np.diagonal(varmatrix)
 
 
@@ -399,7 +400,7 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
     if savefig:
         fig.savefig('scorefigs/R2%s.png'%(plotname), dpi=fig.dpi)
     plt.show()
-    
+
     for i in range(len(karray)):
         plt.plot(lmbx,msescores[i], label='degree= %s'%karray[i])
     plt.legend()
@@ -411,12 +412,15 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
         fig.savefig('scorefigs/MSE%s.png'%(plotname), dpi=fig.dpi)
     plt.show()
 
-"""
-# Shows that I have not fixed the error in the varfunction
-x, y = CreateSampleData(3, 0.01)
-k = 3
-beta1 = LassoReg(x, y, k, 1)
-y_tilde = Polynome(x, y, k, beta1)
+def y_predict(x, k, beta):
+    # Given x, k and beta, returns predicted y
+    y_tilde = np.ones((x.shape[0], 1))*beta[0]
 
-VAR(x, y, y_tilde, k)
-"""
+    for i in range(x.shape[0]):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                y_tilde[i] += beta[SumOneToN(p + 1) + j]*x[i][0]**(p+1-j)*x[i][1]**j
+
+    return y_tilde
+
+def CIvar(beta, varbeta, percentile):

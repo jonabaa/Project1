@@ -10,12 +10,16 @@ from utilities import *
 
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
-
+k = 5
 x, y = CreateSampleData(100, 0.01)
-obeta0 = RidgeReg(x, y, 5, 0)
+obeta0 = RidgeReg(x, y, k, 0)
+y_tilde = y_predict(x, k, obeta0)
+print(y_tilde)
+varvector = VAR(x, y, obeta0)
+print(varvector)
 # Check values of this with bootstrap
 s = np.c_[x, y]
-boots = Bootstrap2(s, RidgeReg, 5, 0, 10)
+boots = Bootstrap2(s, RidgeReg, k, 0, 10)
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
