@@ -10,12 +10,18 @@ from utilities import *
 
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
+k = 5
+x, y = CreateSampleData(1000, 0.01)
+obeta0 = RidgeReg(x, y, k, 0)
 
-x, y = CreateSampleData(100, 0.01)
-obeta0 = RidgeReg(x, y, 5, 0)
+y_tilde = y_predict(x, k, obeta0)
+varvector = VAR(x, y, y_tilde, k)
+CI = CIvar(obeta0, varvector, percentile = 0.95)
+print(CI)
+
 # Check values of this with bootstrap
 s = np.c_[x, y]
-boots = Bootstrap2(s, RidgeReg, 5, 0, 10)
+boots = Bootstrap2(s, RidgeReg, k, 0, 10)
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
@@ -52,8 +58,10 @@ lbeta1 = LassoReg(x, y, 5, 0.01)
 # Introducing real data
 
 # This splits the data into a chunk 100x100 up in the right corner
+"""
 m, n = 100, 100
 x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
+"""
 #plot_realdata(x, y, '100x100nor2')
 
 # Potentially download own data from website
