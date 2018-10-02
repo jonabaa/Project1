@@ -57,9 +57,6 @@ def VAR(x, y, y_tilde, k):
     return np.diagonal(varmatrix)
 
 
-
-
-
 # the Franke function, f:R^2 -> R
 def FrankeFunction(x,y):
     term1 = 0.75*np.exp(-(0.25*(9*x-2)**2) - 0.25*((9*y-2)**2))
@@ -423,4 +420,15 @@ def y_predict(x, k, beta):
 
     return y_tilde
 
-def CIvar(beta, varbeta, percentile):
+def CIvar(beta, varbeta, percentile = 0.95):
+    # Given a beta and variance of beta calculates
+    # the confidence interval of the betas
+
+    stdcoeff = st.norm.ppf((1-percentile)/2)
+    print(stdcoeff)
+    CIvector = np.zeros((len(beta), 2))
+    for i in range(len(beta)):
+        CIvector[i][0] = beta[i] + stdcoeff*np.sqrt(varbeta[i])
+        CIvector[i][1] = beta[i] - stdcoeff*np.sqrt(varbeta[i])
+
+    return CIvector
