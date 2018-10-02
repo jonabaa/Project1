@@ -1,7 +1,3 @@
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import numpy as np
 from random import random, seed
 from sklearn import linear_model
@@ -42,7 +38,7 @@ def FrankeFunction(x,y):
 def SumOneToN(n):
     return int((n + 1)*n/2)
 
-
+# DELETE
 # k-th order polynomial DELETE
 def Polynome(x, y, k, beta):
     if beta.size != SumOneToN(k + 1):
@@ -84,7 +80,7 @@ def RidgeReg(x, y, k, lmb):
     
     return beta
 
-
+# DELETE
 # Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
 # using Lasso regression with lambda=lmb
 def LassoReg(x, y, k, lmb):
@@ -109,12 +105,15 @@ def LassoReg(x, y, k, lmb):
     return beta
 
 
-# create n sample data points
+# This function draws predictors from the square [0,1]^2 with 
+# uniform distribution and computes the value of the Frankefunction 
+# at these points. Finally it adds normally distributed noise around 0
+# to the responses.
 def CreateSampleData(n, s):
     x = np.random.rand(n, 2)
-    y = FrankeFunction(x[:,0:1], x[:,1:2])# + s*np.random.randn((n,1))
+    y = FrankeFunction(x[:,0:1], x[:,1:2]) + s*np.random.randn(n,1)
 
-    return x, y
+    return x[:,0:1], x[:,1:2], y
 
 
 # Bootstrap with B resamples
@@ -163,7 +162,6 @@ def Bootstrap(s, f, k, lmb, p, B):
 def Bootstrap2(s, f, k, lmb, B):
     # allocate arrays for storing bootstrap estimators
     bootstrap_estimator = np.zeros((2, B))
-    #bootstrap_estimator_mean = np.zeros((len(p),))
 
     for b in range(B):
         # draw a random bootstrap sample with replacement
@@ -246,90 +244,5 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
 
     # x and y can be used in the regression-functions
     return x, y
-
-
-
-# plot the fitted function, TO BE REMOVED
-#
-# k = order of polynome
-# beta = coefficients of polynome in ascending order
-#
-def plot_function_3D(k, beta, m, n):
-    # Plots the figure in 3D
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-
-    x1 = np.arange(0, m, 0.1)
-    x2 = np.arange(0, n, 0.1)
-    x1, x2 = np.meshgrid(x1,x2)
-
-    y = Polynome(x1, x2, k, beta)
-
-    # Plot the surface.
-    surf = ax.plot_surface(x1, x2, y, cmap=cm.coolwarm,
-                        linewidth=0, antialiased=False)
-    #surf2 = ax.plot_surface(x1, x2, y_f, cmap=cm.coolwarm,
-    #                       linewidth=0, antialiased=False)
-
-    # Customize the z axis.
-    #ax.set_zlim(-0.10, 1.40)                   #Tar bort limits, skal teste tif-filen
-    ax.zaxis.set_major_locator(LinearLocator(10))
-    ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-
-    # Add a color bar which maps values to colors.
-    fig.colorbar(surf, shrink=0.5, aspect=5)
-
-    plt.show()
-
-def plot_function_2D(k, beta, m, n, navn):
-    # Plots the figure in 2D
-    x1 = np.arange(0, m, 0.05)
-    x2 = np.arange(0, n, 0.05)
-
-    x1, x2 = np.meshgrid(x1, x2)
-
-    y = Polynome(x1, x2, k, beta)
-
-    fig = plt.figure()
-    plt.pcolormesh(x1, x2 ,y , cmap='inferno')
-    plt.colorbar()
-    plt.title('Plot of model')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
-    plt.show()
-
-
-# plotting error measures against lambda and k
-def generate_errorplots(RegMethod, K, lmb, B=100):
-    lmb = .1 # lambda 
-    K = 10 # compute for all degress up to K
-
-    x, y = CreateSampleData(500, .1)
-    s = np.concatenate([x,y], axis=1)
-    
-    for k in range(K):
-        if k == 0:
-            return_values = Bootstrap2(s, RegMethod, k, lmb, B)
-        else:
-            return_values = np.concatenate([return_values, Bootstrap2(s, RidgeReg, k, lmb, B)], axis=1)
-
-    x = range(K)
-
-    # save the plots to files
-    filename1 = "OLS-test1"
-    filename2 = "OLS-test2"
-
-    plt.plot(x, return_values[0,:]/1000, label="Bias^2/1000")
-    plt.plot(x, return_values[1,:], label="Var")
-    plt.legend()
-    plt.savefig(filename1)
-    
-    plt.gcf().clear()
-
-    plt.plot(x, return_values[2,:], label="MSE")
-    plt.plot(x, return_values[3,:], label="R2Score")
-    plt.legend()
-    plt.savefig(filename2)
 
 

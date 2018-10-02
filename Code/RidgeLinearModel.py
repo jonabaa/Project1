@@ -11,7 +11,8 @@ class RidgeLinearModel:
     covariance_matrix = None # covariance matrix of the model coefficients
     covariance_matrix_updated = False
     beta = None # coefficients of the modelfunction
-    x = None # predictors of sampledata
+    x1 = None # first predictor of sampledata
+    x2 = None # second predictor of sampledata
     y = None # responses of sampledata
     y_tilde = None # model predictions for x
     y_tilde_updated = False
@@ -31,24 +32,25 @@ class RidgeLinearModel:
     # @lmb: lambda, determines the emphasize on minimizing the variance 
     #       of the model
     # 
-    def fit(this, x, y):
+    def fit(this, x1, x2, y):
         # store x ands y for later computations
-        this.x = x
+        this.x1 = x1
+        this.x2 = x2
         this.y = y
 
         # calculate the dimensions of the design matrix
-        m = x.shape[0]
+        m = x1.shape[0]
         n = SumOneToN(this.k + 1)
 
         # allocate design matrix
         this.X = np.ones((m, n))
 
         # compute values of design matrix
-        for i in range(m):
+        for i in range(m): # vectoriser denne løkka
             for p in range(this.k):
                 for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
-                    this.X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p 
-                            + 1 - j)*x[i][1]**j
+                    this.X[i][SumOneToN(p + 1) + j] *= x1[i]**(p 
+                            + 1 - j)*x2[i]**j
 
         # compute linear regression coefficients
         this.beta = np.linalg.inv(this.X.T.dot(this.X) + 
@@ -61,21 +63,22 @@ class RidgeLinearModel:
     # Predicts and returns the responses of the predictors with 
     # the fitted model if the model is fitted
     # 
-    # @x: array containing predictors
+    # @x1: Columnvector containing the first predictor values
+    # @x2: Columnvector containing the second predictor values
     #
-    def predict(this, x):
+    def predict(this, x1, x2):
         if this.beta is None:
             print("Error: Model is not fitted.")
             return None
         else:
             # allocate meshgrid filled with constant term
-            y = np.ones((x.shape[0],1))*this.beta[0]
+            y = np.ones(x1.shape)*this.beta[0]
 
             # compute function values
             for p in range(this.k):
                 for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
                     y += this.beta[SumOneToN(p + 1) 
-                            + j]*x[:,0:1]**(p+1-j)*x[:,1:2]**j
+                            + j]*x1**(p+1-j)*x2**j
 
             return y
 
@@ -88,8 +91,9 @@ class RidgeLinearModel:
             return None
         else:
             if not this.covariance_matrix_updated:
-                m = this.x.shape[0]
-                qsigma = (sum(this.y-sum(this.y)/m)/(this.x.shape[0] - this.x.shape[1] -1))
+                m = this.x1.shape[0]
+                qsigma = (sum(this.y - sum(this.y)/m)/(this.x1.shape[0] 
+                    - 2 - 1))
                 this.covariance_matrix = np.linalg.inv(this.X.T.dot(this.X))*qsigma
                 covariance_matrix_updated = True
 
@@ -121,7 +125,7 @@ class RidgeLinearModel:
             if not this.rss_updated:
                 
                 if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x)
+                    this.y_tilde = this.predict(this.x1, this.x2)
 
                 this.rss = RSS(this.y, this.y_tilde)
             
@@ -137,7 +141,7 @@ class RidgeLinearModel:
             if not this.mse_updated:
                 
                 if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x)
+                    this.y_tilde = this.predict(this.x1, this.x2)
 
                 this.mse = MSE(this.y, this.y_tilde)
             
@@ -153,7 +157,7 @@ class RidgeLinearModel:
             if not this.r2score_updated:
                 
                 if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x)
+                    this.y_tilde = this.predict(this.x1, this.x2)
 
                 this.r2score = R2Score(this.y, this.y_tilde)
             
