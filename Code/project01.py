@@ -38,7 +38,9 @@ OLS_cov = OLSmodel.get_covariance_matrix()
 # Ridge Regression on the Franke function
 # with resampling
 
-# rbeta1 = RidgeReg(x, y, 5, 0.1)
+RidgeModel = RidgeLinearModel(lmb=0.01, k=k)
+RidgeModel.fit(x1, x2, y)
+print(RidgeModel.beta)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
 
@@ -53,6 +55,7 @@ OLS_cov = OLSmodel.get_covariance_matrix()
 LassoModel = LassoLinearModel(lmb=0.01, k=k)
 LassoModel.fit(x1, x2, y)
 print(LassoModel.beta)
+print(LassoModel.var_vector)
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
