@@ -26,11 +26,9 @@ class RidgeLinearModel:
     # This function fits the model to the the sample data 
     # using Ridge regression
     #
-    # @x: array containing predictors
+    # @x1: array containing first predictor
+    # @x2: array containing second predictor
     # @y: array containing responses
-    # @k: the degree of the polynomial to be fitted to the sample data
-    # @lmb: lambda, determines the emphasize on minimizing the variance 
-    #       of the model
     # 
     def fit(this, x1, x2, y):
         # store x ands y for later computations
@@ -53,7 +51,7 @@ class RidgeLinearModel:
                             + 1 - j)*x2[i]**j
 
         # compute linear regression coefficients
-        this.beta = np.linalg.inv(this.X.T.dot(this.X) + 
+        this.beta = np.linalg.pinv(this.X.T.dot(this.X) + 
                 this.lmb*np.identity(n)).dot(this.X.T).dot(y)
 
         # stored statistical parameters are no longer valid
@@ -94,7 +92,7 @@ class RidgeLinearModel:
                 m = this.x1.shape[0]
                 qsigma = (sum(this.y - sum(this.y)/m)/(this.x1.shape[0] 
                     - 2 - 1))
-                this.covariance_matrix = np.linalg.inv(this.X.T.dot(this.X))*qsigma
+                this.covariance_matrix = np.linalg.pinv(this.X.T.dot(this.X))*qsigma
                 covariance_matrix_updated = True
 
             return this.covariance_matrix

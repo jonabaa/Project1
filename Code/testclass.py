@@ -7,10 +7,10 @@ from resampling import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-x1, x2, y = CreateSampleData(100, .0)
+x1, x2, y = CreateSampleData(500, .0)
 lmb = .0
-B = 100
-K = 13
+B = 50
+K = 20
 
 """
 model = [1,2,3,4,5,6]
