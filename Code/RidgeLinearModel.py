@@ -3,12 +3,6 @@ import numpy as np
 import scipy.stats as st
 
 class RidgeLinearModel:
-    rss = None # residual squared sum of model
-    rss_updated = False
-    mse = None # Mean squared error of model
-    mse_updated = False
-    r2score = None #R2 score of model
-    r2score_updated = False
     covariance_matrix = None # covariance matrix of the model coefficients
     covariance_matrix_updated = False
     beta = None # coefficients of the modelfunction
@@ -89,54 +83,40 @@ class RidgeLinearModel:
             
 
     # Returns the residuals of the model squared and summed
-    def get_RSS(this):
+    def get_RSS(this, x1, x2, y):
         if this.beta is None:
             print("Error: Model is not fitted.")
             return None
         else:
-            if not this.rss_updated:
-
-                if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x1, this.x2)
-
-                this.rss = RSS(this.y, this.y_tilde)
-                this.rss_updated = True
-
-            return this.rss
+            y_tilde = this.predict(x1, x2)
+            return RSS(y, this.y_tilde)
 
 
-    # Returns the mean squared error of the model
-    def get_MSE(this):
+    # Returns the mean squared error of the model 
+    # given the sample data (x1, x2, y)
+    # 
+    # @x1: vector of first predictor
+    # @x2: vector of second predictor
+    # @y: vector of responses
+    #
+    def get_MSE(this, x1, x2, y):
         if this.beta is None:
             print("Error: Model is not fitted.")
             return None
         else:
-            if not this.mse_updated:
-
-                if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x1, this.x2)
-
-                this.mse = MSE(this.y, this.y_tilde)
-                this.mse_updated = True
-
-            return this.mse
+            y_tilde = this.predict(x1, x2)
+            return MSE(y, y_tilde)
 
 
     # Returns the R2 score of the model
-    def get_R2Score(this):
+    def get_R2Score(this, x1, x2, y):
         if this.beta is None:
             print("Error: Model is not fitted.")
             return None
         else:
-            if not this.r2score_updated:
+            y_tilde = this.predict(x1, x2)
+            return R2Score(y, y_tilde)
 
-                if not this.y_tilde_updated:
-                    this.y_tilde = this.predict(this.x1, this.x2)
-
-                this.r2score = R2Score(this.y, this.y_tilde)
-                this.r2score_updated = True
-
-            return this.r2score
 
     # Returns the confidence interval of the betas
     def get_CI_of_beta(this, percentile=.95):
@@ -160,10 +140,9 @@ class RidgeLinearModel:
 
 
     def set_updated_to_false(this):
-        rss_updated = False
-        mse_updated = False
-        r2score_updated = False
         covariance_matrix_updated = False
         var_vector_updated = False
         y_tilde_updated = False
         CIbeta_updated = False
+
+
