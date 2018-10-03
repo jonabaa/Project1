@@ -1,5 +1,6 @@
 from utilities import *
 from OLSLinearModel import OLSLinearModel
+from resampling import *
 
 
 
@@ -18,10 +19,11 @@ OLSmodel.fit(x1, x2, y)
 
 OLS_var = OLSmodel.get_variance_of_coefficients()
 OLS_CI = OLSmodel.get_CI_of_beta()
-print(OLS_CI)
+print('OLS_var')
+print(OLS_var)
 
 # Check values of this with bootstrap
-# boots = Bootstrap2(s, RidgeReg, k, 0, 10)
+#OLSboots = Bootstrap2(x1, x2, y, k, 0, 100)
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
