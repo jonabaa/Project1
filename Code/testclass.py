@@ -7,6 +7,7 @@ from resampling import *
 import numpy as np
 import matplotlib.pyplot as plt
 
+np.random.seed(1000)
 x1, x2, y = CreateSampleData(500, .0)
 lmb = .0
 B = 50
