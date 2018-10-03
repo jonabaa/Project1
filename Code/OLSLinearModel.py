@@ -27,7 +27,7 @@ class OLSLinearModel(RidgeLinearModel):
 
     # Computes and returns the variance of the coefficients of the model
     # Only works for OLS
-    def get_variance_of_coefficients(this):
+    def get_variance_of_betas(this):
         if this.beta is None:
             print("Error: Model is not fitted.")
             return None
