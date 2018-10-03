@@ -34,27 +34,16 @@ def BootstrapRidge(x1, x2, y, k, lmb, B):
         else:
             y_tilde_matrix = np.concatenate([y_tilde_matrix, y_tilde], axis=1)
         # compute estimators of parameters
-        bootstrap_estimator[0,b] = model.get_MSE()
-        bootstrap_estimator[1,b] = model.get_R2Score()
+        bootstrap_estimator[0,b] = model.get_MSE(x1, x2, y)
+        bootstrap_estimator[1,b] = model.get_R2Score(x1, x2, y)
     
     #compute expected value in each x over the bootstrapsamples
-    """
-    E_L = (np.sum(y_tilde_matrix, axis=1)/B).reshape((len(y_tilde),1))
-    """
     E_L = (np.mean(y_tilde_matrix, axis=1, keepdims=True))
     
     # compute bias
-    """
-    # QUICKFIX. only valid if underlying data is FrankeFunction!
-    f = FrankeFunction(x1, x2)
-    bias = np.sum((f - E_L)**2)
-    """
     bias = np.mean((y - E_L)**2)
     
     # compute variance
-    """
-    var = sum(np.sum((y_tilde_matrix - E_L)**2, axis=1)/B)
-    """
     var = np.mean(np.mean((y_tilde_matrix - E_L)**2, axis=1, keepdims=True))
 
     # compute bootstrap mean of estimators
