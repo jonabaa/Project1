@@ -67,7 +67,7 @@ def plot_model_3D(model):
 
 
 # Takes degree of function, the beta and the scale of plotting as input
-def plot_function_2D(k, beta, m, n, navn):
+def plot_function_2D(k, beta, m, n, navn, savefig=False):
     # Plots the figure in 2D
     x1 = arange(0, m, 0.05)
     x2 = arange(0, n, 0.05)
@@ -82,14 +82,15 @@ def plot_function_2D(k, beta, m, n, navn):
     plt.title('Plot of model')
     plt.xlabel('X')
     plt.ylabel('Y')
-    fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
+    if savefig:
+        fig.savefig('figs/%s.png'%(navn), dpi=fig.dpi)
     plt.show()
 
 
 # This function creates and stores two plots:
 # The first one plots Bias and Variance against order of the polynome/model
 # The second one plots MSE and R2Score against order of the polynome/model
-# 
+#
 # @RegMethod: regressionmethod to be used when creating models
 # @K: fit polynomials of degree 0 up to K
 # @lmb: the lambda to use if RegMethod is Lasso or Ridge
@@ -126,11 +127,14 @@ def generate_errorplots(RegMethod, K, lmb, B=100):
     plt.legend()
     plt.savefig(filename2)
 
-def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=False):
+def plotscores(RegMethod, plotname , karray=[3,4,5], lambdasteps=5, savefig=False):
 
     lmbx = np.logspace(-2, 4, lambdasteps)
     r2scores = np.zeros((len(karray), len(lmbx)))
     msescores = np.zeros((len(karray),len(lmbx)))
+
+    # Definer x1, x2, y, k, lmb og B til bootstrap
+
 
     for j in range(len(karray)):
         for i in range(len(lmbx)):
