@@ -127,7 +127,7 @@ def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=Fa
     for j in range(len(karray)):
         for i in range(len(lmbx)):
             # Will implement for function for each k
-            mse, r2 = Bootstrap2(s, function, karray[j], lmbx[i], 10)
+            bias, var, mse, r2 = BootstrapRidge(s, function, karray[j], lmbx[i], 10)
             r2scores[j][i] = r2
             msescores[j][i] = mse
 

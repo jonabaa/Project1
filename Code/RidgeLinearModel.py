@@ -58,7 +58,7 @@ class RidgeLinearModel:
                             + 1 - j)*x2[i]**j
 
         # compute linear regression coefficients
-        this.beta = np.linalg.inv(this.X.T.dot(this.X) +
+        this.beta = np.linalg.pinv(this.X.T.dot(this.X) +
                 this.lmb*np.identity(n)).dot(this.X.T).dot(y)
 
         # stored statistical parameters are no longer valid
@@ -99,7 +99,9 @@ class RidgeLinearModel:
                 m = this.x1.shape[0]
                 qsigma = (sum(this.y - sum(this.y)/m)/(this.x1.shape[0]
                     - 2 - 1))
-                this.covariance_matrix = np.linalg.inv(this.X.T.dot(this.X))*qsigma
+                # using pinv instead of inv because inv return negative values
+                # on the diagonal
+                this.covariance_matrix = np.linalg.pinv(this.X.T.dot(this.X))*qsigma
                 this.covariance_matrix_updated = True
 
             return this.covariance_matrix
@@ -113,11 +115,7 @@ class RidgeLinearModel:
         else:
             if not this.var_vector_updated:
                 var_matrix = this.get_covariance_matrix()
-                n = SumOneToN(this.k + 1)
-                this.var_vector = np.ones(n)
-
-                for i in range(n):
-                    this.var_vector[i] = var_matrix[i][i]
+                this.var_vector = np.diagonal(var_matrix)
                 this.var_vector_updated = True
 
             return this.var_vector
@@ -185,7 +183,6 @@ class RidgeLinearModel:
                 stdcoeff = st.norm.ppf((1-percentile)/2)
                 this.CI_beta = np.zeros((len(this.beta), 2))
                 for i in range(len(this.beta)):
-                    print(this.var_vector[i])
                     this.CI_beta[i][0] = this.beta[i] + stdcoeff*np.sqrt(this.var_vector[i])
                     this.CI_beta[i][1] = this.beta[i] - stdcoeff*np.sqrt(this.var_vector[i])
 

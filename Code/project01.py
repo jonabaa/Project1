@@ -1,6 +1,8 @@
 from utilities import *
 from OLSLinearModel import OLSLinearModel
+from LassoLinearModel import LassoLinearModel
 from resampling import *
+from visualization import *
 
 
 
@@ -18,12 +20,13 @@ OLSmodel = OLSLinearModel(k)
 OLSmodel.fit(x1, x2, y)
 
 OLS_var = OLSmodel.get_variance_of_coefficients()
-OLS_CI = OLSmodel.get_CI_of_beta()
-print('OLS_var')
-print(OLS_var)
+OLS_cov = OLSmodel.get_covariance_matrix()
+#print(OLS_cov)
+#OLS_CI = OLSmodel.get_CI_of_beta()
+
 
 # Check values of this with bootstrap
-#OLSboots = Bootstrap2(x1, x2, y, k, 0, 100)
+#OLSboots = BootstrapRidge(x1, x2, y, k, 0, 100)
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
@@ -45,8 +48,12 @@ print(OLS_var)
 # Part c)-------------------------
 # Lasso Regression on the Franke function
 # with resampling
-
-# lbeta1 = LassoReg(x, y, 5, 0.01)
+"""
+LassoModel = LassoLinearModel(lmb=0.01, k=k)
+LassoModel.fit(x1, x2, y)
+print(LassoModel.beta)
+print(LassoModel.get_variance_of_coefficients())
+"""
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
@@ -60,10 +67,10 @@ print(OLS_var)
 # Introducing real data
 
 # This splits the data into a chunk 100x100 up in the right corner
-"""
+
 m, n = 100, 100
-x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
-"""
+x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
+
 #plot_realdata(x, y, '100x100nor2')
 
 # Potentially download own data from website
@@ -75,14 +82,20 @@ x, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 # OLS, Ridge and Lasso regression with resampling
 
 
-#obetareal = RidgeReg(x, y, 5, 0)
+RealOLSModel = OLSLinearModel(k)
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
 #s = np.c_[x, y]
 #plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
 #rbetareal = RidgeReg(x, y, 5, 0.1)
 #plot_function_2D(5, rbetareal, m, n, 'e-Ridge01')
-
+"""
+"""
+RealLassoModel = LassoLinearModel(lmb=0.01, k=k)
+RealLassoModel.fit(x1, x2, y)
+print(RealLassoModel.beta)
+print(RealLassoModel.get_variance_of_coefficients())
+print(RealLassoModel.get_R2Score())
 #lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 

@@ -94,7 +94,7 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
         return None, None
 
     x = np.zeros((mlimit*nlimit, 2))
-    y = np.zeros((mlimit*nlimit, 1))
+    y = np.zeros((mlimit*nlimit))
 
     # Seperate x1 and x2 in coloumns in x and the
     # corresponding values in y
@@ -109,7 +109,7 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
 
 
     # x and y can be used in the regression-functions
-    return x, y
+    return x[:,0], x[:,1], y
 
 def CIvar(beta, varbeta, percentile = 0.95):
     # Given a beta and variance of beta calculates
