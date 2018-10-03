@@ -1,4 +1,5 @@
 from utilities import *
+from OLSLinearModel import OLSLinearModel
 
 
 
@@ -11,21 +12,16 @@ from utilities import *
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
 k = 5
-x, y = CreateSampleData(1000, 0.01)
-obeta0 = RidgeReg(x, y, k, 0)
+x1, x2, y = CreateSampleData(1000, 0.01)
+OLSmodel = OLSLinearModel(k)
+OLSmodel.fit(x1, x2, y)
 
-y_tilde = y_predict(x, k, obeta0)
-varvector = VAR(x, y, y_tilde, k)
-CI = CIvar(obeta0, varvector, percentile = 0.95)
-print(CI)
-print('MSE:')
-print(MSE(y, y_tilde))
-print('R2Score:')
-print(R2Score(y, y_tilde))
+OLS_var = OLSmodel.get_variance_of_coefficients()
+OLS_CI = OLSmodel.get_CI_of_beta()
+print(OLS_CI)
 
 # Check values of this with bootstrap
-s = np.c_[x, y]
-boots = Bootstrap2(s, RidgeReg, k, 0, 10)
+# boots = Bootstrap2(s, RidgeReg, k, 0, 10)
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
@@ -37,7 +33,7 @@ boots = Bootstrap2(s, RidgeReg, k, 0, 10)
 # Ridge Regression on the Franke function
 # with resampling
 
-rbeta1 = RidgeReg(x, y, 5, 0.1)
+# rbeta1 = RidgeReg(x, y, 5, 0.1)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
 
@@ -48,7 +44,7 @@ rbeta1 = RidgeReg(x, y, 5, 0.1)
 # Lasso Regression on the Franke function
 # with resampling
 
-lbeta1 = LassoReg(x, y, 5, 0.01)
+# lbeta1 = LassoReg(x, y, 5, 0.01)
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
