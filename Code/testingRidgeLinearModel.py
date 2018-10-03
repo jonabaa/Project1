@@ -19,5 +19,5 @@ x = np.concatenate([x1, x2], axis=1)
 X = PolynomialFeatures(k).fit_transform(x)
 sc_model.fit(X, y)
 
-print("my_model r2score: %f" % my_model.get_R2Score())
+print("my_model r2score: %f" % my_model.get_R2Score(x1, x2, y))
 print("sc_model r2score: %f" % sc_model.score(X, y))

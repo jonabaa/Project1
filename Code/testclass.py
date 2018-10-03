@@ -7,11 +7,11 @@ from resampling import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-np.random.seed(1000)
-x1, x2, y = CreateSampleData(500, .0)
+#np.random.seed(1254)
+x1, x2, y = CreateSampleData(100, .0)
 lmb = .0
 B = 50
-K = 20
+K = 7
 
 """
 model = [1,2,3,4,5,6]
@@ -34,8 +34,9 @@ for k in range(K):
     print("")
 
 x = np.linspace(0,K,K)
-plt.plot(x, returnvalues[0,:])
+plt.plot(x, np.sqrt(returnvalues[0,:]))
 plt.plot(x, returnvalues[1,:])
+plt.xlabel("Degree of polynomial")
 plt.legend(["bias","varians"])
 plt.show()
 
