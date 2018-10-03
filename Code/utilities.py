@@ -111,6 +111,17 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
     # x and y can be used in the regression-functions
     return x, y
 
+def y_predict(x, k, beta):
+    # Given x, k and beta, returns predicted y
+    y_tilde = np.ones((x.shape[0], 1))*beta[0]
+
+    for i in range(x.shape[0]):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                y_tilde[i] += beta[SumOneToN(p + 1) + j]*x[i][0]**(p+1-j)*x[i][1]**j
+
+    return y_tilde
+
 def CIvar(beta, varbeta, percentile = 0.95):
     # Given a beta and variance of beta calculates
     # the confidence interval of the betas

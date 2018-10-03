@@ -117,3 +117,40 @@ def generate_errorplots(RegMethod, K, lmb, B=100):
     plt.plot(x, return_values[3,:], label="R2Score")
     plt.legend()
     plt.savefig(filename2)
+
+def plotscores(function, s, plotname , karray=[3,4,5], lambdasteps=5, savefig=False):
+
+    lmbx = np.logspace(-2, 4, lambdasteps)
+    r2scores = np.zeros((len(karray), len(lmbx)))
+    msescores = np.zeros((len(karray),len(lmbx)))
+
+    for j in range(len(karray)):
+        for i in range(len(lmbx)):
+            # Will implement for function for each k
+            mse, r2 = Bootstrap2(s, function, karray[j], lmbx[i], 10)
+            r2scores[j][i] = r2
+            msescores[j][i] = mse
+
+    fig = plt.figure()
+
+    for i in range(len(karray)):
+        plt.plot(lmbx,r2scores[i], label='degree= %s'%karray[i])
+    plt.legend()
+    plt.title('R2 of %s' %plotname)
+    plt.xlabel('lambda')
+    plt.xscale('log')
+    plt.ylabel('R2')
+    if savefig:
+        fig.savefig('scorefigs/R2%s.png'%(plotname), dpi=fig.dpi)
+    plt.show()
+
+    for i in range(len(karray)):
+        plt.plot(lmbx,msescores[i], label='degree= %s'%karray[i])
+    plt.legend()
+    plt.title('MSE of %s' %plotname)
+    plt.xlabel('lambda')
+    plt.xscale('log')
+    plt.ylabel('MSE')
+    if savefig:
+        fig.savefig('scorefigs/MSE%s.png'%(plotname), dpi=fig.dpi)
+    plt.show()
