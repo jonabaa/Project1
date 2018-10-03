@@ -42,7 +42,7 @@ def plot_model_3D(model):
     # make instance of plot object
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    
+
     # set up grid of independent variables
     x1 = arange(0, 1, 0.01)
     x2 = arange(0, 1, 0.01)
@@ -66,6 +66,7 @@ def plot_model_3D(model):
     plt.show()
 
 
+# Takes degree of function, the beta and the scale of plotting as input
 def plot_function_2D(k, beta, m, n, navn):
     # Plots the figure in 2D
     x1 = arange(0, m, 0.05)
@@ -87,12 +88,12 @@ def plot_function_2D(k, beta, m, n, navn):
 
 # plotting error measures against lambda and k
 def generate_errorplots(RegMethod, K, lmb, B=100):
-    lmb = .1 # lambda 
+    lmb = .1 # lambda
     K = 10 # compute for all degress up to K
 
     x, y = CreateSampleData(500, .1)
     s = concatenate([x,y], axis=1)
-    
+
     for k in range(K):
         if k == 0:
             return_values = Bootstrap2(s, RegMethod, k, lmb, B)
@@ -109,12 +110,10 @@ def generate_errorplots(RegMethod, K, lmb, B=100):
     plt.plot(x, return_values[1,:], label="Var")
     plt.legend()
     plt.savefig(filename1)
-    
+
     plt.gcf().clear()
 
     plt.plot(x, return_values[2,:], label="MSE")
     plt.plot(x, return_values[3,:], label="R2Score")
     plt.legend()
     plt.savefig(filename2)
-
-

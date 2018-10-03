@@ -18,6 +18,10 @@ y_tilde = y_predict(x, k, obeta0)
 varvector = VAR(x, y, y_tilde, k)
 CI = CIvar(obeta0, varvector, percentile = 0.95)
 print(CI)
+print('MSE:')
+print(MSE(y, y_tilde))
+print('R2Score:')
+print(R2Score(y, y_tilde))
 
 # Check values of this with bootstrap
 s = np.c_[x, y]
