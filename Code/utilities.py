@@ -5,7 +5,7 @@ from imageio import imread
 import scipy.stats as st
 
 
-# Residual sums squared 
+# Residual sums squared
 def RSS(y, y_tilde):
     return np.sum((y - y_tilde)**2, axis=0)
 
@@ -50,6 +50,8 @@ def VAR(x, y, y_tilde, k):
 
     # the diagonal is the variance, other indexes represents covariances
     # only want to return the variance
+
+    # returns the variance corresponding to each beta that was the input
     return np.diagonal(varmatrix)
 
 
@@ -68,8 +70,8 @@ def SumOneToN(n):
     return int((n + 1)*n/2)
 
 
-# This function draws predictors from the square [0,1]^2 with 
-# uniform distribution and computes the value of the Frankefunction 
+# This function draws predictors from the square [0,1]^2 with
+# uniform distribution and computes the value of the Frankefunction
 # at these points. Finally it adds normally distributed noise around 0
 # to the responses.
 def CreateSampleData(n, s):
@@ -77,7 +79,7 @@ def CreateSampleData(n, s):
     y = FrankeFunction(x[:,0:1], x[:,1:2]) + s*np.random.randn(n,1)
 
     return x[:,0:1], x[:,1:2], y
-  
+
 
 # This just reads an mxn block of the input-file
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
@@ -92,7 +94,7 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
         return None, None
 
     x = np.zeros((mlimit*nlimit, 2))
-    y = np.zeros((mlimit*nlimit, 1))
+    y = np.zeros((mlimit*nlimit))
 
     # Seperate x1 and x2 in coloumns in x and the
     # corresponding values in y
@@ -107,18 +109,20 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
 
 
     # x and y can be used in the regression-functions
-    return x, y
+    return x[:,0], x[:,1], y
 
 def CIvar(beta, varbeta, percentile = 0.95):
     # Given a beta and variance of beta calculates
     # the confidence interval of the betas
 
+    # stdcoeff is the z-score to the two-sided confidence interval
     stdcoeff = st.norm.ppf((1-percentile)/2)
-    print(stdcoeff)
+
     CIvector = np.zeros((len(beta), 2))
     for i in range(len(beta)):
         CIvector[i][0] = beta[i] + stdcoeff*np.sqrt(varbeta[i])
         CIvector[i][1] = beta[i] - stdcoeff*np.sqrt(varbeta[i])
 
+    # CIvector returns a nx2 matrix with each row
+    # representing the confidence interval to the corresponding beta
     return CIvector
-  

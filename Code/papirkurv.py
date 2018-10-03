@@ -17,7 +17,7 @@ def Polynome(x, y, k, beta):
 
 # DELETE
 # Fits a k-th order polynomial, p:R^2 -> R, to the given data x, y
-# using Ridge regression with lambda=lmb 
+# using Ridge regression with lambda=lmb
 def RidgeReg(x, y, k, lmb):
     print(x.shape)
     # calculate the dimensions of the design matrix
@@ -35,9 +35,9 @@ def RidgeReg(x, y, k, lmb):
 
     # compute linear regression coefficients
     beta = np.linalg.inv(X.T.dot(X) + lmb*np.identity(n)).dot(X.T).dot(y)
-    
+
     covar_matrix = np.linalg.inv(X.T.dot(X)) #*(sum(y-sum(y)/m)/(x.shape[0] - x.shape[1] -1))
-    
+
     return beta
 
 # DELETE
@@ -142,10 +142,10 @@ def Bootstrap2(s, f, k, lmb, B):
 
     # compute variance
     var = sum(np.sum((y_tilde_matrix - E_L)**2, axis=1)/B)
-    
+
     # compute bias
     bias = np.sum((y - E_L)**2)
-    
+
     # compute bootstrap mean of estimators
     estimator_mean = np.sum(bootstrap_estimator, axis=1)/B
 
@@ -163,5 +163,13 @@ def Bootstrap2(s, f, k, lmb, B):
 
     return return_values
 
+def y_predict(x, k, beta):
+    # Given x, k and beta, returns predicted y
+    y_tilde = np.ones((x.shape[0], 1))*beta[0]
 
+    for i in range(x.shape[0]):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                y_tilde[i] += beta[SumOneToN(p + 1) + j]*x[i][0]**(p+1-j)*x[i][1]**j
 
+    return y_tilde
