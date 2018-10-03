@@ -2,6 +2,7 @@ import numpy as np
 from random import random, seed
 from sklearn import linear_model
 from imageio import imread
+import scipy.stats as st
 
 
 # Residual sums squared 
@@ -22,6 +23,34 @@ def R2Score(y, y_tilde):
 # Mean absolute error
 def MAE(y, y_tilde):
     return np.sum(np.abs(y - y_tilde), axis=1)/y.size
+
+# Variance of beta
+def VAR(x, y, y_tilde, k):
+    # Need to compute
+    # Var(BETA) = (X^T X)^-1 sigma^2
+    # X is the construct matrix
+    # sigma^2 = 1/(N - k - 1) * RSS
+    m = x.shape[0]
+    n = SumOneToN(k + 1)
+
+    # allocate design matrix
+    X = np.ones((m, n))
+
+
+    # compute values of design matrix
+    for i in range(m):
+        for p in range(k):
+            for j in range(SumOneToN(p + 2) - SumOneToN(p + 1)):
+                X[i][SumOneToN(p + 1) + j] *= x[i][0]**(p+1-j)*x[i][1]**j
+
+
+    varmatrix = np.linalg.inv(((X.T).dot(X))) * ((1/(len(y)-k-1))*RSS(y, y_tilde))
+    # sigma2 = ((1/(len(y)-k-1))*RSS(y, y_tilde))
+
+
+    # the diagonal is the variance, other indexes represents covariances
+    # only want to return the variance
+    return np.diagonal(varmatrix)
 
 
 # the Franke function, f:R^2 -> R
@@ -48,9 +77,9 @@ def CreateSampleData(n, s):
     y = FrankeFunction(x[:,0:1], x[:,1:2]) + s*np.random.randn(n,1)
 
     return x[:,0:1], x[:,1:2], y
+  
 
-
-
+# This just reads an mxn block of the input-file
 def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif',):
     # Sets default to SRTM data Norway 1
     im = imread(filename)
@@ -80,4 +109,16 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
     # x and y can be used in the regression-functions
     return x, y
 
+def CIvar(beta, varbeta, percentile = 0.95):
+    # Given a beta and variance of beta calculates
+    # the confidence interval of the betas
 
+    stdcoeff = st.norm.ppf((1-percentile)/2)
+    print(stdcoeff)
+    CIvector = np.zeros((len(beta), 2))
+    for i in range(len(beta)):
+        CIvector[i][0] = beta[i] + stdcoeff*np.sqrt(varbeta[i])
+        CIvector[i][1] = beta[i] - stdcoeff*np.sqrt(varbeta[i])
+
+    return CIvector
+  
