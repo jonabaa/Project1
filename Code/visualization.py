@@ -85,9 +85,17 @@ def plot_function_2D(k, beta, m, n, navn):
     plt.show()
 
 
-# plotting error measures against lambda and k
+# This function creates and stores two plots:
+# The first one plots Bias and Variance against order of the polynome/model
+# The second one plots MSE and R2Score against order of the polynome/model
+# 
+# @RegMethod: regressionmethod to be used when creating models
+# @K: fit polynomials of degree 0 up to K
+# @lmb: the lambda to use if RegMethod is Lasso or Ridge
+# @B: number of bootstrapsamples
+#
 def generate_errorplots(RegMethod, K, lmb, B=100):
-    lmb = .1 # lambda 
+    lmb = .1 # lambda
     K = 10 # compute for all degress up to K
 
     x, y = CreateSampleData(500, .1)
