@@ -19,10 +19,9 @@ x1, x2, y = CreateSampleData(1000, 0.01)
 OLSmodel = OLSLinearModel(k)
 OLSmodel.fit(x1, x2, y)
 
-OLS_var = OLSmodel.get_variance_of_coefficients()
+OLS_var = OLSmodel.get_variance_of_betas()
 OLS_cov = OLSmodel.get_covariance_matrix()
-#print(OLS_cov)
-#OLS_CI = OLSmodel.get_CI_of_beta()
+OLS_CI = OLSmodel.get_CI_of_beta()
 
 
 # Check values of this with bootstrap
@@ -40,7 +39,7 @@ OLS_cov = OLSmodel.get_covariance_matrix()
 
 RidgeModel = RidgeLinearModel(lmb=0.01, k=k)
 RidgeModel.fit(x1, x2, y)
-print(RidgeModel.beta)
+#print(RidgeModel.beta)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
 
@@ -55,7 +54,8 @@ print(RidgeModel.beta)
 LassoModel = LassoLinearModel(lmb=0.01, k=k)
 LassoModel.fit(x1, x2, y)
 print(LassoModel.beta)
-print(LassoModel.var_vector)
+print(LassoModel.get_variance_of_betas(100))
+print(LassoModel.get_CI_of_beta())
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
