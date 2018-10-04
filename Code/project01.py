@@ -14,14 +14,36 @@ from visualization import *
 
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
-k = 5
-x1, x2, y = CreateSampleData(1000, 0.01)
-OLSmodel = OLSLinearModel(k)
-OLSmodel.fit(x1, x2, y)
+import pandas as pd
+klist = []
+CI = []
+MSE = []
+R2 = []
 
-OLS_var = OLSmodel.get_variance_of_betas()
-OLS_cov = OLSmodel.get_covariance_matrix()
-OLS_CI = OLSmodel.get_CI_of_beta()
+
+for k in range(1,6):
+    x1, x2, y = CreateSampleData(1000, 0.01)
+    OLSmodel = OLSLinearModel(k)
+    OLSmodel.fit(x1, x2, y)
+
+    OLS_var = OLSmodel.get_sample_variance_of_betas()
+    print(OLS_var)
+    OLS_CI = OLSmodel.get_CI_of_beta()
+    OLS_MSE = OLSmodel.get_MSE(x1, x2, y)
+    OLS_R2 = OLSmodel.get_R2Score(x1, x2, y)
+
+    klist.append(k)
+    MSE.append(OLS_MSE)
+    R2.append(OLS_R2)
+    CI.append(OLS_CI)
+
+d ={'R2' : pd.Series(R2, index=klist),
+   'MSE' : pd.Series(MSE, index=klist),
+    'CI' : pd.Series(CI, index=klist)}
+
+table = pd.DataFrame(d)
+#print(table)
+
 
 
 # Check values of this with bootstrap
@@ -53,9 +75,8 @@ RidgeModel.fit(x1, x2, y)
 """
 LassoModel = LassoLinearModel(lmb=0.01, k=k)
 LassoModel.fit(x1, x2, y)
-print(LassoModel.beta)
-print(LassoModel.get_variance_of_betas(100))
-print(LassoModel.get_CI_of_beta())
+Lasso_VAR = LassoModel.get_variance_of_betas(100)
+Lasso_CI = LassoModel.get_CI_of_beta()
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
