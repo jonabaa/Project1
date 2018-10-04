@@ -3,6 +3,7 @@ from OLSLinearModel import OLSLinearModel
 from LassoLinearModel import LassoLinearModel
 from resampling import *
 from visualization import *
+import pandas as pd
 
 
 
@@ -14,36 +15,42 @@ from visualization import *
 
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
-import pandas as pd
-klist = []
-CI = []
-MSE = []
-R2 = []
+def MSEandR2table(x1, x2, y, RegMethod, krange, lmb=0.1):
+    klist = []
+    MSElist = []
+    R2list = []
+    for k in range(1, krange+1):
+        if RegMethod is OLSLinearModel:
+            model = RegMethod(k)
+        else:
+            model = RegMethod(lmb, k)
+        model.fit(x1, x2, y)
+
+        var = model.get_variance_of_betas()
+        MSE = model.get_MSE(x1, x2, y)
+        R2 = model.get_R2Score(x1, x2, y)
+
+        klist.append(k)
+        MSElist.append(MSE)
+        R2list.append(R2)
+
+    d ={'R2' : pd.Series(R2list, index=klist),
+        'MSE' : pd.Series(MSElist, index=klist)}
+
+    return pd.DataFrame(d)
 
 
-for k in range(1,6):
-    x1, x2, y = CreateSampleData(1000, 0.01)
-    OLSmodel = OLSLinearModel(k)
-    OLSmodel.fit(x1, x2, y)
 
-    OLS_var = OLSmodel.get_sample_variance_of_betas()
-    print(OLS_var)
-    OLS_CI = OLSmodel.get_CI_of_beta()
-    OLS_MSE = OLSmodel.get_MSE(x1, x2, y)
-    OLS_R2 = OLSmodel.get_R2Score(x1, x2, y)
 
-    klist.append(k)
-    MSE.append(OLS_MSE)
-    R2.append(OLS_R2)
-    CI.append(OLS_CI)
 
-d ={'R2' : pd.Series(R2, index=klist),
-   'MSE' : pd.Series(MSE, index=klist),
-    'CI' : pd.Series(CI, index=klist)}
 
-table = pd.DataFrame(d)
-#print(table)
 
+x1, x2, y = CreateSampleData(1000, 0.01)
+"""
+print('OLS Test Data')
+print(MSEandR2table(x1,x2,y,OLSLinearModel, 5))
+print()
+"""
 
 
 # Check values of this with bootstrap
@@ -58,9 +65,11 @@ table = pd.DataFrame(d)
 # Part b)-------------------------
 # Ridge Regression on the Franke function
 # with resampling
-
-RidgeModel = RidgeLinearModel(lmb=0.01, k=k)
-RidgeModel.fit(x1, x2, y)
+"""
+print('Ridge Test Data')
+print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
+print()
+"""
 #print(RidgeModel.beta)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
@@ -72,11 +81,9 @@ RidgeModel.fit(x1, x2, y)
 # Lasso Regression on the Franke function
 # with resampling
 """
+print('Lasso Test Data')
+print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
 """
-LassoModel = LassoLinearModel(lmb=0.01, k=k)
-LassoModel.fit(x1, x2, y)
-Lasso_VAR = LassoModel.get_variance_of_betas(100)
-Lasso_CI = LassoModel.get_CI_of_beta()
 # Check values of this with bootstrap
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
@@ -91,10 +98,12 @@ Lasso_CI = LassoModel.get_CI_of_beta()
 
 # This splits the data into a chunk 100x100 up in the right corner
 
-"""
 m, n = 100, 100
 x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
 
+print('Lasso Real Data')
+print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
+"""
 #plot_realdata(x, y, '100x100nor2')
 
 # Potentially download own data from website
@@ -118,8 +127,8 @@ RealLassoModel.fit(x1, x2, y)
 print(RealLassoModel.beta)
 print(RealLassoModel.get_variance_of_coefficients())
 print(RealLassoModel.get_R2Score())
-"""
 #lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
 # Basicly repeat of a-c just with real data
+"""

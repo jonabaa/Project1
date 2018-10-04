@@ -34,7 +34,7 @@ class LassoLinearModel(RidgeLinearModel):
 
     # Computes the sample variance of the coefficients of the model
     # @B: The number of samples used
-    def get_variance_of_betas(this, B):
+    def get_variance_of_betas(this, B=20):
         m = len(this.x1)
         n = SumOneToN(this.k + 1)
         betasamples = np.zeros((n, B))
