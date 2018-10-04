@@ -15,44 +15,44 @@ def MSEandR2table(x1, x2, y, RegMethod, krange, lmb=0.1):
             model = RegMethod(k)
         else:
             model = RegMethod(lmb, k)
-            model.fit(x1, x2, y)
 
-            MSE = model.get_MSE(x1, x2, y)
-            R2 = model.get_R2Score(x1, x2, y)
+        model.fit(x1, x2, y)
 
-            klist.append(k)
-            MSElist.append(MSE)
-            R2list.append(R2)
+        MSE = model.get_MSE(x1, x2, y)
+        R2 = model.get_R2Score(x1, x2, y)
 
-            d ={'R2' : pd.Series(R2list, index=klist),
-            'MSE' : pd.Series(MSElist, index=klist)}
+        klist.append(k)
+        MSElist.append(MSE)
+        R2list.append(R2)
 
-            return pd.DataFrame(d)
+    d ={'R2' : pd.Series(R2list, index=klist),
+        'MSE' : pd.Series(MSElist, index=klist)}
+
+    return pd.DataFrame(d)
 
 # PROJECT 01 SOLUTIONS
 x1, x2, y = CreateSampleData(1000, 0.01)
-
 # Part a)-------------------------
 # Ordinary Least Square on the Franke function
 # with resampling
 
 # This is just Ridge with lambda = 0
 # Need to find variance of beta, compute MSE
-
-OLSmodel = OLSLinearModel
-
 print('OLS Test Data')
 print(MSEandR2table(x1,x2,y,OLSLinearModel, 5))
 print()
 
+OLSmodel = OLSLinearModel(5)
+OLSmodel.fit(x1, x2, y)
+
+OLS_var = OLSmodel.get_variance_of_betas()
+OLS_CI = OLSmodel.get_CI_of_beta()
+
 print('Var of Beta')
+print(OLS_var)
 
-
-
-
-
-
-
+print('95-percentage CI of betas')
+print(OLS_CI)
 
 # Check values of this with bootstrap
 #OLSboots = BootstrapRidge(x1, x2, y, k, 0, 100)
@@ -71,6 +71,17 @@ print('Var of Beta')
 print('Ridge Test Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
 print()
+Ridgemodel = RidgeLinearModel(5)
+Ridgemodel.fit(x1, x2, y)
+
+Ridge_var = Ridgemodel.get_variance_of_betas()
+Ridge_CI = Ridgemodel.get_CI_of_beta()
+
+print('Var of Beta')
+print(Ridge_var)
+
+print('95-percentage CI of betas')
+print(Ridge_CI)
 #print(RidgeModel.beta)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
