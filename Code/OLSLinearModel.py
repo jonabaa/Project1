@@ -56,6 +56,9 @@ class OLSLinearModel(RidgeLinearModel):
                     s_x1 = this.x1[c]
                     s_x2 = this.x2[c]
                     s_y = this.y[c]
+                    # Next line fixes if y is one-dimensional
+                    if (len(s_y.shape)) == 1:
+                        s_y = np.expand_dims(this.y[c], axis=1)
 
                     # allocate design matrix
                     s_X = np.ones((m, n))
@@ -67,7 +70,7 @@ class OLSLinearModel(RidgeLinearModel):
                                 s_X[i][SumOneToN(p + 1) + j] *= s_x1[i]**(p
                                         + 1 - j)*s_x2[i]**j
 
-                    betasamples[:,b] = np.linalg.pinv(s_X.T.dot(s_X)).dot(s_X.T).dot(s_y)[:,0]
+                    betasamples[:,b] = np.linalg.pinv(s_X.T.dot(s_X)).dot(s_X.T).dot(s_y)[:, 0]
 
                 betameans = betasamples.sum(axis=1, keepdims=True)/B
 
