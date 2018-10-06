@@ -10,7 +10,7 @@ k                      MSE                   R2
 4   [0.003960217232650187]  [0.9460150723293508]
 5  [0.0018602479352178107]  [0.9746414541595732]
 
-Var of Beta
+Var of Beta, degree 5
 [9.47238055e-03 8.01217226e-01 4.12183842e-01 9.89887798e+00
  8.39455751e+00 4.14211294e+00 2.71771303e+01 3.28888083e+01
  1.78285914e+01 1.31093669e+01 1.91368860e+01 2.67004422e+01
@@ -18,7 +18,7 @@ Var of Beta
  4.40599813e+00 3.60735967e+00 1.80107762e+00 1.00979408e+00
  1.50021893e+00]
 
-95-percentage CI of betas
+95-percentage CI of betas, degree 5
 [[ 7.25873511e-02  4.54098870e-01]
  [ 7.23335269e+00  1.07421092e+01]
  [ 3.44378188e+00  5.96043621e+00]
@@ -41,10 +41,35 @@ Var of Beta
  [ 1.66275865e+01  2.05666637e+01]
  [-1.80168037e+01 -1.32155417e+01]]
 
- Bootstrapssss
+Bootstrap-values from degree of 1 and 100 bootstrap-samples
+VAR: 0.000071
+BIAS: 0.023444
+Bootstrap mean of MSE: 0.0235
+Bootstrap mean of r2Score: 0.7125
 
- 
+Bootstrap-values from degree of 2 and 100 bootstrap-samples
+VAR: 0.000092
+BIAS: 0.016943
+Bootstrap mean of MSE: 0.0170
+Bootstrap mean of r2Score: 0.7918
 
+Bootstrap-values from degree of 3 and 100 bootstrap-samples
+VAR: 0.000073
+BIAS: 0.007740
+Bootstrap mean of MSE: 0.0078
+Bootstrap mean of r2Score: 0.9045
+
+Bootstrap-values from degree of 4 and 100 bootstrap-samples
+VAR: 0.000076
+BIAS: 0.004147
+Bootstrap mean of MSE: 0.0042
+Bootstrap mean of r2Score: 0.9484
+
+Bootstrap-values from degree of 5 and 100 bootstrap-samples
+VAR: 0.000052
+BIAS: 0.001933
+Bootstrap mean of MSE: 0.0020
+Bootstrap mean of r2Score: 0.9757
 
 --------------
 Oppgave b)
@@ -57,6 +82,13 @@ k                     MSE                    R2
 3  [0.010258352759015437]  [0.8777843076427536]
 4  [0.009382588378732645]  [0.8882179662029949]
 5  [0.009143926633340667]  [0.8910613282063765]
+
+
+
+
+
+
+
 
 --------------
 Oppgave c)

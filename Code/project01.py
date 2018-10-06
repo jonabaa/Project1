@@ -50,12 +50,16 @@ OLS_CI = OLSmodel.get_CI_of_beta()
 
 print('Var of Beta')
 print(OLS_var)
+print()
 
 print('95-percentage CI of betas')
 print(OLS_CI)
+print()
 
-# Check values of this with bootstrap
-#OLSboots = BootstrapRidge(x1, x2, y, k, 0, 100)
+for i in range(1, 6):
+    print('Bootstrap-values from degree of %s and 100 bootstrap-samples'%i)
+    OLSboots = BootstrapRidge(x1, x2, y, i, 0, 100)
+    print()
 #
 # Plots different scores with MSE and R2
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10)
@@ -71,7 +75,7 @@ print(OLS_CI)
 print('Ridge Test Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
 print()
-Ridgemodel = RidgeLinearModel(5)
+Ridgemodel = RidgeLinearModel(0.01, 5)
 Ridgemodel.fit(x1, x2, y)
 
 Ridge_var = Ridgemodel.get_variance_of_betas()
