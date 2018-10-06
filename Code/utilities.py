@@ -93,7 +93,8 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
         print("Decrease nlimit")
         return None, None
 
-    x = np.zeros((mlimit*nlimit, 2))
+    x1 = np.zeros((mlimit*nlimit))
+    x2 = np.zeros((mlimit*nlimit))
     y = np.zeros((mlimit*nlimit))
 
     # Seperate x1 and x2 in coloumns in x and the
@@ -102,14 +103,14 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
     # Make x all combinations of the axis and y corresponds in value
     for i in range(0, mlimit):
         for j in range(0, nlimit):
-            x[i + j*mlimit][0] = i
-            x[i+ j*mlimit][1] = j
+            x1[i + j*mlimit] = i
+            x2[i+ j*mlimit] = j
 
             y[i+ j*mlimit] = im[i][j]
 
 
     # x and y can be used in the regression-functions
-    return x[:,0], x[:,1], y
+    return x1, x2, y
 
 def CIvar(beta, varbeta, percentile = 0.95):
     # Given a beta and variance of beta calculates

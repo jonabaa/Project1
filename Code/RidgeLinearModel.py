@@ -80,7 +80,7 @@ class RidgeLinearModel:
                             + j]*x1**(p+1-j)*x2**j
 
             return y
-            
+
 
     # Returns the residuals of the model squared and summed
     def get_RSS(this, x1, x2, y):
@@ -92,9 +92,9 @@ class RidgeLinearModel:
             return RSS(y, this.y_tilde)
 
 
-    # Returns the mean squared error of the model 
+    # Returns the mean squared error of the model
     # given the sample data (x1, x2, y)
-    # 
+    #
     # @x1: vector of first predictor
     # @x2: vector of second predictor
     # @y: vector of responses
@@ -117,10 +117,10 @@ class RidgeLinearModel:
             y_tilde = this.predict(x1, x2)
             return R2Score(y, y_tilde)
 
-    
+
     # Computes the sample variance of the coefficients of the model
     # @B: The number of samples used
-    def get_variance_of_betas(this, B):
+    def get_variance_of_betas(this, B=20):
         m = len(this.x1)
         n = SumOneToN(this.k + 1)
         betasamples = np.zeros((n, B))
@@ -131,6 +131,9 @@ class RidgeLinearModel:
             s_x1 = this.x1[c]
             s_x2 = this.x2[c]
             s_y = this.y[c]
+            # Next line fixes if y is one-dimensional
+            if (len(s_y.shape)) == 1:
+                s_y = np.expand_dims(this.y[c], axis=1)
 
             # allocate design matrix
             s_X = np.ones((m, n))
@@ -143,7 +146,7 @@ class RidgeLinearModel:
                                 + 1 - j)*s_x2[i]**j
 
             betasamples[:,b] = np.linalg.pinv(s_X.T.dot(s_X) +
-                    this.lmb*np.identity(n)).dot(s_X.T).dot(s_y)[:,0]
+                    this.lmb*np.identity(n)).dot(s_X.T).dot(s_y)[:, 0]
 
         betameans = betasamples.sum(axis=1, keepdims=True)/B
 
@@ -179,5 +182,3 @@ class RidgeLinearModel:
         var_vector_updated = False
         y_tilde_updated = False
         CIbeta_updated = False
-
-
