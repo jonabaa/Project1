@@ -5,6 +5,13 @@ from resampling import *
 from visualization import *
 import pandas as pd
 
+#----------------------------------------#
+# ALL OF THIS DATA IS STORED IN DATA.TXT #
+# IF YOU WANT TO CHECK IF THE CODE WORKS #
+# RUN PARTS OF IT, AS THE WHOLE THING    #
+# TAKES A while                          #
+#----------------------------------------#
+
 
 def MSEandR2table(x1, x2, y, RegMethod, krange, lmb=0.1):
     klist = []
@@ -141,10 +148,16 @@ for i in range(1, 6):
 # This splits the data into a chunk 100x100 up in the right corner
 
 """
+#----------------------#
+#                      #
+#     REAL DATA        #
+#                      #
+#----------------------#
+
 # Decide how much of the chunk we analyze
+
 m, n = 100, 100
 x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
-
 #plot_realdata(x, y, '100x100nor2')
 
 # Potentially download own data from website
@@ -156,6 +169,7 @@ x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.
 # OLS, Ridge and Lasso regression with resampling
 
 #--OLS
+"""
 
 print('OLS Real Data')
 print(MSEandR2table(x1,x2,y,OLSLinearModel, 5))
@@ -174,14 +188,15 @@ print()
 print('95-percentage CI of betas')
 print(OLS_CI)
 print()
-"""
 # Need to fix bootstrap for real values
 for i in range(1, 6):
     print('Bootstrap-values from degree of %s and 100 bootstrap-samples'%i)
     OLSboots = BootstrapRidge(x1, x2, y, i, 0, 100)
     print()
-"""
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
+"""
+"""
+"""
 #s = np.c_[x, y]
 #plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
@@ -204,6 +219,13 @@ print(Ridge_CI)
 
 #plot_function_2D(5, rbetareal, m, n, 'e-Ridge01')
 
+#Bootstrap
+for i in range(1, 6):
+    for j in [0.1, 1, 10]:
+        print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
+        BootstrapRidge(x1, x2, y, i, j, 100)
+        print()
+"""
 #--Lasso--
 print('Lasso Real Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
@@ -221,15 +243,15 @@ print(Lasso_var)
 print('95-percentage CI of betas')
 print(Lasso_CI)
 
-"""
+#Bootstrap
 for i in range(1, 6):
     for j in [0.1, 1, 10]:
         print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
-        OLSboots = BootstrapLasso(x1, x2, y, i, j, 100)
+        BootstrapLasso(x1, x2, y, i, j, 100)
         print()
-"""
 
 #lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
 # Basicly repeat of a-c just with real data
+"""

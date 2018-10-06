@@ -78,8 +78,7 @@ Also the 95-percentage confidence interval of the betas:
 \\ The code and commenting for the calculations is to be found in python-file project01.py
 \subsection*{Resampling}
 Using our bootstrapping algorithm with a resampling of 100, degree of five, we get these values:
-
-VAR: 0.000052
+\\VAR: 0.000052
 \\BIAS: 0.001933
 \\Bootstrap mean of MSE: 0.0020
 \\Bootstrap mean of r2Score: 0.9757
@@ -102,18 +101,128 @@ k & MSE                   & R2                 \\
 \end{tabular}
 \end{table}
 \\Compared to OLS, we can tell that Ridge does significantly worse then OLS.
+\\Var of Beta, degree 5
+\begin{align*}
+[ 0.00077004\quad  0.01729839\quad  0.01384995\quad  0.06816008\quad  0.06826285\quad  0.05696662\\
+  0.0417508\quad   0.02034709\quad  0.06671475\quad  0.03500783 \quad 0.02294549\quad  0.01073849\\
+  0.03470761\quad  0.01261125\quad  0.02127092 \quad 0.03349824 \quad 0.01062464 \quad 0.03548007\\
+  0.03422875\quad  0.04204926\quad  0.02520149]
+\end{align*}
+Also the 95-percentage confidence interval of the betas:
+95-percentage CI of betas, degree 5
+\begin{align*}
+[[  8.39518095e-01 \quad  9.45603016e-01]\\
+   [  6.00189901e-01 \quad  1.10406786e+00]\\
+   [  9.22637923e-01 \quad  1.52633094e+00]\\
+   [ -6.51421032e+00 \quad -5.30387095e+00]\\
+   [  5.84279933e-01 \quad  1.67511842e+00]\\
+   [ -5.82384066e+00\quad  -4.85326698e+00]\\
+   [  3.42317950e+00 \quad  4.16050815e+00]\\
+   [  1.31502300e+00 \quad  2.10193829e+00]\\
+   [ -2.00335018e+00\quad  -1.07460992e+00]\\
+   [  1.38884378e+00\quad   1.92131292e+00]\\
+   [  3.21253289e+00\quad   3.98989176e+00]\\
+   [  5.79118852e-01 \quad  1.17557901e+00]\\
+   [ -3.41043372e-02 \quad  7.77207310e-01]\\
+   [ -8.02285903e-01 \quad -2.23570539e-01]\\
+   [  3.31692208e+00\quad   3.80174824e+00]\\
+   [ -3.69457810e+00\quad  -2.99905374e+00]\\
+   [ -2.10226995e+00\quad  -1.54360569e+00]\\
+   [ -5.64130918e-03 \quad  8.94344017e-01]\\
+   [ -1.07674065e+00\quad  -1.87377295e-01]\\
+   [  3.14047856e-01 \quad  8.79022520e-01]\\
+   [ -1.87908328e+00\quad  -1.35609332e+00]]\\
+\end{align*}
 
 \subsection*{Resampling}
 We can take a look at how different lambdas and different degrees of the polynomial makes a change in the R2-score and the MSE.
 \\Here is a plot to show how they develop as a function of lambda.
 \\ \includegraphics[scale=.7]{R2Ridge}
 \\ We can tell pretty easily that the degree of the predictions doesn't matter much compared to how much the choice of lambda do. We can still tell that a lower degree function does worse then the other functions.
+\\
+\\Some interesting values from bootstrap:
+\\
+\\Bootstrap-values from degree of 5, lmb = 0.1 and 100 bootstrap-samples
+\\VAR: 0.000067
+\\BIAS: 0.008640
+\\Bootstrap mean of MSE: 0.0087
+\\Bootstrap mean of r2Score: 0.8980
+\\
+\\Bootstrap-values from degree of 5, lmb = 1 and 100 bootstrap-samples
+\\VAR: 0.000059
+\\BIAS: 0.011915
+\\Bootstrap mean of MSE: 0.0120
+\\Bootstrap mean of r2Score: 0.8597
+\\
+\\Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
+\\VAR: 0.000066
+\\BIAS: 0.020274
+\\Bootstrap mean of MSE: 0.0203
+\\Bootstrap mean of r2Score: 0.7617
+\\
+\\Bootstrap-values from degree of 2, lmb = 10 and 100 bootstrap-samples
+\\VAR: 0.000057
+\\BIAS: 0.022754
+\\Bootstrap mean of MSE: 0.0228
+\\Bootstrap mean of r2Score: 0.7327
 
 \clearpage
 
 \section*{Part c)}
 Lasso Regression with $\lambda = 0.01$
 \\ \includegraphics[scale=.7]{c-LassoLambda001}
+\\Ridge Test Data
+\begin{table}[!h]
+\begin{tabular}{lll}
+k & MSE                   & R2                 \\
+1 & 0.25272407945476655  & -2.01089746779934852 \\
+2 & 0.25272407945476655  & -2.0108974677993485 \\
+3 & 0.25272407945476655  & -2.0108974677993485 \\
+4 & 0.25272407945476655  & -2.0108974677993485 \\
+5 & 0.25272407945476655 & -2.0108974677993485
+\end{tabular}
+\end{table}
+
+Var of Beta
+\begin{align*}
+[ 0.   \quad       0.00025829 \quad 0.00394575\quad  0.     \quad     0.    \quad      0.00324571\\
+  0.      \quad    0.     \quad     0.    \quad      0.    \quad      0.     \quad     0.    \quad      0.\\
+  0.     \quad     0.   \quad       0.      \quad    0.     \quad     0.     \quad     0.   \quad       0.\\
+  0.        ]
+\end{align*}
+
+95-percentage CI of betas
+\begin{align*}
+[[ 0.      \quad    0.        ]\\
+ [-0.40937802\quad -0.34637908]\\
+ [-0.17825992\quad  0.06797132]\\
+ [-0.      \quad    0.        ]\\
+ [-0.   \quad       0.        ]\\
+ [-0.58986796\quad -0.36654512]\\
+ [-0.    \quad      0.        ]\\
+ [-0.   \quad       0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.   \quad       0.        ]\\
+ [-0.     \quad     0.        ]\\
+ [-0.     \quad     0.        ]\\
+ [-0.   \quad       0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.     \quad     0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.    \quad      0.        ]\\
+ [-0.   \quad       0.        ]\\
+ [-0.    \quad      0.        ]]
+\end{align*}
+\\There is obviusly something happening with Lasso that doesn't work. Our Lasso method works great with the real data.
+\subsection*{Resampling}
+Bootstrap-values from degree of 1, lmb = 0.1 and 100 bootstrap-samples
+\\VAR: 0.000000
+\\BIAS: 0.239704
+\\Bootstrap mean of MSE: 0.2397
+\\Bootstrap mean of r2Score: -2.0278
+\\This was the same for all degrees and values of lambda, so I only included this.
 \clearpage
 
 \section*{Part d)}
@@ -121,12 +230,79 @@ Imports 100x100 chunk of real data from top left corner of dataset nr.1.
 \\Plot of real data
 \\ \includegraphics[scale=.7]{100x100nor2}
 \clearpage
-\section*{Part e)}
-Repeat of a-c, but with real data from d)
-\\OLS:
+\section*{Real Data}
+Repeat of the previous method and data, but with real data.
+\section*{OLS}
+Plot of the data with the OLS-method of degree 5:
 \\ \includegraphics[scale=.7]{e-OLS}
-\\Ridge:
+\\ OLS Score of the Real Data:
+\begin{table}[!h]
+\begin{tabular}{lll}
+k & MSE                   & R2                 \\
+1 & 1912.190996  & 0.587579 \\
+2 & 1177.397306  & 0.746059 \\
+3 & 1023.042624  & 0.779351 \\
+4 & 824.587589  & 0.822153 \\
+5 & 791.268452 & 0.829340
+\end{tabular}
+\end{table}
+\\Var of Beta
+\begin{align*}
+[  2.32350868e-17\quad   3.59021583e-14 \quad  9.26320612e-14\quad   6.67623760e-12\\
+   2.76179532e-12\quad   2.44594128e-11 \quad  1.00899287e-09  \quad 2.82477031e-08\\
+   3.26102575e-08 \quad  4.03014136e-09 \quad  7.93068781e-13  \quad 8.29815731e-12\\
+   2.72417498e-12 \quad  8.99036913e-12 \quad  2.47909085e-12 \quad  4.07929803e-17\\
+   2.67723887e-16 \quad  5.18767547e-16 \quad  4.23509770e-16 \quad  1.84571052e-16\\
+   9.42227510e-17]
+\end{align*}
+
+\subsection*{Resampling}
+Bootstrap-values from degree of 5 and 100 bootstrap-samples
+\\VAR: 1.287057
+\\BIAS: 791.273865
+\\Bootstrap mean of MSE: 792.5609
+\\Bootstrap mean of r2Score: 0.8291
+\\
+\\The MSE and R2-score are really close to our values for MSE and R2.
+
+\section*{Ridge}
+Plot of the data with the Ridge-method of degree 5, lambda = 0.1:
 \\ \includegraphics[scale=.7]{e-Ridge01}
-\\Lasso:
+\\ Ridge Score of the Real Data with lambda = 0.1:
+\begin{table}[!h]
+\begin{tabular}{lll}
+k & MSE                   & R2                 \\
+1 & 1912.190999  & 0.587579 \\
+2 & 1177.397307  & 0.746059 \\
+3 & 1023.042624  & 0.779351 \\
+4 & 824.635824  & 0.822143 \\
+5 & 791.268452 & 0.829340
+\end{tabular}
+\end{table}
+\subsection*{Resampling}
+Bootstrap
+\section*{Lasso}
+Plot of the data with the Lasso-method of degree 5, lambda = 0.01:
 \\ \includegraphics[scale=.7]{e-Lassolamda001}
+\\ Lasso Score of the Real Data with lambda= 0.1:
+\begin{table}[!h]
+\begin{tabular}{lll}
+k & MSE                   & R2                 \\
+1 & 6601.647721  & -0.423841 \\
+2 & 1564.545187  & 0.662560 \\
+3 & 1189.660192  & 0.743415 \\
+4 & 1155.338990  & 0.750817 \\
+5 & 974.391256 & 0.789844
+\end{tabular}
+\end{table}
+\subsection*{Resampling}
+Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
+\\VAR: 1.689048
+\\BIAS: 1239.400793
+\\Bootstrap mean of MSE: 1241.0898
+\\Bootstrap mean of r2Score: 0.7323
+\\
+\\Here the MSE and R2score is a pretty long way from our scores when we use all our data. So the model is probably a little overfitted and we should expect our R2 to actually be lower than it is.
+\clearpage
+\section*{Conclusion}
 \end{document}
