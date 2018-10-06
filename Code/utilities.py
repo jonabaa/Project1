@@ -93,9 +93,9 @@ def tifread(mlimit=100, nlimit=100, filename='data_files/SRTM_data_Norway_1.tif'
         print("Decrease nlimit")
         return None, None
 
-    x1 = np.zeros((mlimit*nlimit))
-    x2 = np.zeros((mlimit*nlimit))
-    y = np.zeros((mlimit*nlimit))
+    x1 = np.zeros((mlimit*nlimit, 1))
+    x2 = np.zeros((mlimit*nlimit, 1))
+    y = np.zeros((mlimit*nlimit, 1))
 
     # Seperate x1 and x2 in coloumns in x and the
     # corresponding values in y
