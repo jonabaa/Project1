@@ -32,6 +32,7 @@ def MSEandR2table(x1, x2, y, RegMethod, krange, lmb=0.1):
 
 # PROJECT 01 SOLUTIONS
 x1, x2, y = CreateSampleData(1000, 0.01)
+"""
 # Part a)-------------------------
 # Ordinary Least Square on the Franke function
 # with resampling
@@ -70,12 +71,10 @@ for i in range(1, 6):
 # Part b)-------------------------
 # Ridge Regression on the Franke function
 # with resampling
-"""
-"""
 print('Ridge Test Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
 print()
-Ridgemodel = RidgeLinearModel(0.01, 5)
+Ridgemodel = RidgeLinearModel(0.1, 5)
 Ridgemodel.fit(x1, x2, y)
 
 Ridge_var = Ridgemodel.get_variance_of_betas()
@@ -86,10 +85,16 @@ print(Ridge_var)
 
 print('95-percentage CI of betas')
 print(Ridge_CI)
-#print(RidgeModel.beta)
 #plotscores(RidgeReg, s,'Ridge' ,lambdasteps=10, karray=[2, 5, 10],savefig=False)
 # Check values of this with bootstrap
 
+for i in range(1, 6):
+    for j in [0.1, 1, 10]:
+        print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
+        OLSboots = BootstrapRidge(x1, x2, y, i, j, 100)
+        print()
+
+"""
 
 #plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
 
@@ -97,11 +102,31 @@ print(Ridge_CI)
 # Lasso Regression on the Franke function
 # with resampling
 
+"""
 print('Lasso Test Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
 print()
 
+Lassomodel = LassoLinearModel(0.01, 5)
+Lassomodel.fit(x1, x2, y)
+
+Lasso_var = Lassomodel.get_variance_of_betas()
+Lasso_CI = Lassomodel.get_CI_of_beta()
+
+print('Var of Beta')
+print(Lasso_var)
+
+print('95-percentage CI of betas')
+print(Lasso_CI)
+
 # Check values of this with bootstrap
+
+# FIX THINGS INSIDE??
+for i in range(1, 6):
+    for j in [0.1, 1, 10]:
+        print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
+        OLSboots = BootstrapLasso(x1, x2, y, i, j, 100)
+        print()
 # Plots different scores with MSE and R2
 #plotscores(LassoReg, s, 'Lasso',lambdasteps=10)
 #plot_function_2D(5, lbeta1, 1, 1, 'c-LassoLambda001')
@@ -116,7 +141,6 @@ print()
 # This splits the data into a chunk 100x100 up in the right corner
 
 """
-"""
 # Decide how much of the chunk we analyze
 m, n = 100, 100
 x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.tif')
@@ -130,23 +154,81 @@ x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.
 
 # Part e)-------------------------
 # OLS, Ridge and Lasso regression with resampling
-"""
-"""
+
+#--OLS
+
 print('OLS Real Data')
 print(MSEandR2table(x1,x2,y,OLSLinearModel, 5))
 print()
+
+OLSmodel = OLSLinearModel(5)
+OLSmodel.fit(x1, x2, y)
+
+OLS_var = OLSmodel.get_variance_of_betas()
+OLS_CI = OLSmodel.get_CI_of_beta()
+
+print('Var of Beta')
+print(OLS_var)
+print()
+
+print('95-percentage CI of betas')
+print(OLS_CI)
+print()
+"""
+# Need to fix bootstrap for real values
+for i in range(1, 6):
+    print('Bootstrap-values from degree of %s and 100 bootstrap-samples'%i)
+    OLSboots = BootstrapRidge(x1, x2, y, i, 0, 100)
+    print()
+"""
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
 #s = np.c_[x, y]
 #plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
+
+#--Ridge--
 print('Ridge Real Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
 print()
+Ridgemodel = RidgeLinearModel(0.1, 5)
+Ridgemodel.fit(x1, x2, y)
+
+Ridge_var = Ridgemodel.get_variance_of_betas()
+Ridge_CI = Ridgemodel.get_CI_of_beta()
+
+print('Var of Beta')
+print(Ridge_var)
+
+print('95-percentage CI of betas')
+print(Ridge_CI)
 
 #plot_function_2D(5, rbetareal, m, n, 'e-Ridge01')
+
+#--Lasso--
 print('Lasso Real Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
 print()
+
+Lassomodel = LassoLinearModel(0.01, 5)
+Lassomodel.fit(x1, x2, y)
+
+Lasso_var = Lassomodel.get_variance_of_betas()
+Lasso_CI = Lassomodel.get_CI_of_beta()
+
+print('Var of Beta')
+print(Lasso_var)
+
+print('95-percentage CI of betas')
+print(Lasso_CI)
+
+"""
+for i in range(1, 6):
+    for j in [0.1, 1, 10]:
+        print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
+        OLSboots = BootstrapLasso(x1, x2, y, i, j, 100)
+        print()
+"""
+
 #lbetareal = LassoReg(x, y, 5, 0.01)
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
