@@ -373,6 +373,97 @@ Var of Beta
  [  3.76296252e-07   4.32230918e-07]
  [ -1.15559844e-07  -7.45239355e-08]]
 
+ Bootstrap:
+ Bootstrap-values from degree of 1, lmb = 0.1 and 100 bootstrap-samples
+VAR: 0.674513
+BIAS: 1912.197943
+Bootstrap mean of MSE: 1912.8725
+Bootstrap mean of r2Score: 0.5874
+
+Bootstrap-values from degree of 1, lmb = 1 and 100 bootstrap-samples
+VAR: 0.597468
+BIAS: 1912.199635
+Bootstrap mean of MSE: 1912.7971
+Bootstrap mean of r2Score: 0.5874
+
+Bootstrap-values from degree of 1, lmb = 10 and 100 bootstrap-samples
+VAR: 0.615327
+BIAS: 1912.230011
+Bootstrap mean of MSE: 1912.8453
+Bootstrap mean of r2Score: 0.5874
+
+Bootstrap-values from degree of 2, lmb = 0.1 and 100 bootstrap-samples
+VAR: 0.672218
+BIAS: 1177.398751
+Bootstrap mean of MSE: 1178.0710
+Bootstrap mean of r2Score: 0.7459
+
+Bootstrap-values from degree of 2, lmb = 1 and 100 bootstrap-samples
+VAR: 0.676985
+BIAS: 1177.412060
+Bootstrap mean of MSE: 1178.0890
+Bootstrap mean of r2Score: 0.7459
+
+Bootstrap-values from degree of 2, lmb = 10 and 100 bootstrap-samples
+VAR: 0.638030
+BIAS: 1177.412804
+Bootstrap mean of MSE: 1178.0508
+Bootstrap mean of r2Score: 0.7459
+
+Bootstrap-values from degree of 3, lmb = 0.1 and 100 bootstrap-samples
+VAR: 0.992013
+BIAS: 1023.054342
+Bootstrap mean of MSE: 1024.0464
+Bootstrap mean of r2Score: 0.7791
+
+Bootstrap-values from degree of 3, lmb = 1 and 100 bootstrap-samples
+VAR: 1.032457
+BIAS: 1023.046671
+Bootstrap mean of MSE: 1024.0791
+Bootstrap mean of r2Score: 0.7791
+
+Bootstrap-values from degree of 3, lmb = 10 and 100 bootstrap-samples
+VAR: 0.922791
+BIAS: 1023.054452
+Bootstrap mean of MSE: 1023.9772
+Bootstrap mean of r2Score: 0.7791
+
+Bootstrap-values from degree of 4, lmb = 0.1 and 100 bootstrap-samples
+VAR: 1.104278
+BIAS: 824.609251
+Bootstrap mean of MSE: 825.7135
+Bootstrap mean of r2Score: 0.8219
+
+Bootstrap-values from degree of 4, lmb = 1 and 100 bootstrap-samples
+VAR: 1.036742
+BIAS: 824.606697
+Bootstrap mean of MSE: 825.6434
+Bootstrap mean of r2Score: 0.8219
+
+Bootstrap-values from degree of 4, lmb = 10 and 100 bootstrap-samples
+VAR: 1.108176
+BIAS: 824.542982
+Bootstrap mean of MSE: 825.6512
+Bootstrap mean of r2Score: 0.8219
+
+Bootstrap-values from degree of 5, lmb = 0.1 and 100 bootstrap-samples
+VAR: 1.235243
+BIAS: 791.277878
+Bootstrap mean of MSE: 792.5131
+Bootstrap mean of r2Score: 0.8291
+
+Bootstrap-values from degree of 5, lmb = 1 and 100 bootstrap-samples
+VAR: 1.225804
+BIAS: 791.280234
+Bootstrap mean of MSE: 792.5060
+Bootstrap mean of r2Score: 0.8291
+
+Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
+VAR: 1.297002
+BIAS: 791.285081
+Bootstrap mean of MSE: 792.5821
+Bootstrap mean of r2Score: 0.8291
+
 --Lasso--
 
 Lasso Test Data lmb = 0.1
