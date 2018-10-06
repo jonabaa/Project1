@@ -78,8 +78,7 @@ Also the 95-percentage confidence interval of the betas:
 \\ The code and commenting for the calculations is to be found in python-file project01.py
 \subsection*{Resampling}
 Using our bootstrapping algorithm with a resampling of 100, degree of five, we get these values:
-
-VAR: 0.000052
+\\VAR: 0.000052
 \\BIAS: 0.001933
 \\Bootstrap mean of MSE: 0.0020
 \\Bootstrap mean of r2Score: 0.9757
@@ -102,12 +101,70 @@ k & MSE                   & R2                 \\
 \end{tabular}
 \end{table}
 \\Compared to OLS, we can tell that Ridge does significantly worse then OLS.
+\\Var of Beta, degree 5
+\begin{align*}
+[ 0.00077004\quad  0.01729839\quad  0.01384995\quad  0.06816008\quad  0.06826285\quad  0.05696662\\
+  0.0417508\quad   0.02034709\quad  0.06671475\quad  0.03500783 \quad 0.02294549\quad  0.01073849\\
+  0.03470761\quad  0.01261125\quad  0.02127092 \quad 0.03349824 \quad 0.01062464 \quad 0.03548007\\
+  0.03422875\quad  0.04204926\quad  0.02520149]
+\end{align*}
+Also the 95-percentage confidence interval of the betas:
+95-percentage CI of betas, degree 5
+\begin{align*}
+[[  8.39518095e-01 \quad  9.45603016e-01]\\
+   [  6.00189901e-01 \quad  1.10406786e+00]\\
+   [  9.22637923e-01 \quad  1.52633094e+00]\\
+   [ -6.51421032e+00 \quad -5.30387095e+00]\\
+   [  5.84279933e-01 \quad  1.67511842e+00]\\
+   [ -5.82384066e+00\quad  -4.85326698e+00]\\
+   [  3.42317950e+00 \quad  4.16050815e+00]\\
+   [  1.31502300e+00 \quad  2.10193829e+00]\\
+   [ -2.00335018e+00\quad  -1.07460992e+00]\\
+   [  1.38884378e+00\quad   1.92131292e+00]\\
+   [  3.21253289e+00\quad   3.98989176e+00]\\
+   [  5.79118852e-01 \quad  1.17557901e+00]\\
+   [ -3.41043372e-02 \quad  7.77207310e-01]\\
+   [ -8.02285903e-01 \quad -2.23570539e-01]\\
+   [  3.31692208e+00\quad   3.80174824e+00]\\
+   [ -3.69457810e+00\quad  -2.99905374e+00]\\
+   [ -2.10226995e+00\quad  -1.54360569e+00]\\
+   [ -5.64130918e-03 \quad  8.94344017e-01]\\
+   [ -1.07674065e+00\quad  -1.87377295e-01]\\
+   [  3.14047856e-01 \quad  8.79022520e-01]\\
+   [ -1.87908328e+00\quad  -1.35609332e+00]]\\
+\end{align*}
 
 \subsection*{Resampling}
 We can take a look at how different lambdas and different degrees of the polynomial makes a change in the R2-score and the MSE.
 \\Here is a plot to show how they develop as a function of lambda.
 \\ \includegraphics[scale=.7]{R2Ridge}
 \\ We can tell pretty easily that the degree of the predictions doesn't matter much compared to how much the choice of lambda do. We can still tell that a lower degree function does worse then the other functions.
+\\
+\\Some interesting values from bootstrap:
+\\
+\\Bootstrap-values from degree of 5, lmb = 0.1 and 100 bootstrap-samples
+\\VAR: 0.000067
+\\BIAS: 0.008640
+\\Bootstrap mean of MSE: 0.0087
+\\Bootstrap mean of r2Score: 0.8980
+\\
+\\Bootstrap-values from degree of 5, lmb = 1 and 100 bootstrap-samples
+\\VAR: 0.000059
+\\BIAS: 0.011915
+\\Bootstrap mean of MSE: 0.0120
+\\Bootstrap mean of r2Score: 0.8597
+\\
+\\Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
+\\VAR: 0.000066
+\\BIAS: 0.020274
+\\Bootstrap mean of MSE: 0.0203
+\\Bootstrap mean of r2Score: 0.7617
+\\
+\\Bootstrap-values from degree of 2, lmb = 10 and 100 bootstrap-samples
+\\VAR: 0.000057
+\\BIAS: 0.022754
+\\Bootstrap mean of MSE: 0.0228
+\\Bootstrap mean of r2Score: 0.7327
 
 \clearpage
 
