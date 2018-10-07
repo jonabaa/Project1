@@ -8,7 +8,9 @@
 	{Code/figs/}
 	{Code/scorefigs/}
 }
+\usepackage{cite}
 \usepackage{amsmath}
+\usepackage{bm}
 \usepackage{stackengine}
 \usepackage{listings}
 \usepackage{amsfonts}
@@ -17,12 +19,95 @@
 \author {Jon Audun Baar \& Mikael Ravndal}
 \begin{document}
 \maketitle
-All of the plots of the models are done with degree equals 5.
-\section*{Introduction}
-In this project we were to analyse different sets of data; test-data from the Franke-function and real data, using different linear regression models. The main goal of the project was to evaulate the different models, and come to a conclusion in terms of which models would fit best with which data.
-\\Most of our code is in the GitHub repository. We have chosen to not use the code in our report.
-\\We have, however, made a python file, project01.py, that provides most of our code in sequence, so that it is possible to follow the code that produce our tests and plots in order.
-\section*{Ordinary least square on test data}
+%All of the plots of the models are done with degree equals 5.
+
+\section{Introduction}
+A common problem in inferential statistics is to investigate the 
+relationship between two stocastic variables, in particular how one 
+of them depends on the other. A widely used method to develop a 
+model for this relationship is technique called linear regression. 
+In this project 
+we aim to evaluate the performance of three different types of 
+linear regression (OLS-, ridge- and lassoregression) 
+using a polynomial as our model.
+\par First we evaluate our methods on a known function, that is we know 
+the relationship between our variables. Then we apply the same methods 
+to evaluate the performance of our methods on a real data set where 
+we don’t know the underlying relationship (if there is any at all).
+%In this project we were to analyse different sets of data; test-data 
+%from the Franke-function and real data, using different linear 
+%regression models. The main goal of the project was to evaulate the 
+%different models, and come to a conclusion in terms of which models 
+%would fit best with which data.
+\par Most of our code is in the GitHub repository. We have chosen to not use the code in our report. We have, however, made a python file, 
+project01.py, that provides most of our code in sequence, 
+so that it is possible to follow the code that produce our testresults 
+and plots in order.
+
+\section{Method}
+The general idea of linear regression is to assume that the relationship 
+between your independent and dependent variables is given by some function,
+and then try to approximate this function, also called a model, 
+by minimizing some error term. 
+In our particular case we have two independent variables, 
+also called predictors, and one dependent variable, also called response. 
+We also assume that this relationship is given by a polynomial. 
+\par 
+something about variance vs bias
+
+\subsection{Ordinary least squares regression}
+First we looked at fitting our model using what is called ordinary least
+squares regression. In this case the error that we wish to minimize, 
+also called the cost function, is defined by 
+$C(\bm{\beta}) = \sum_{i=1}^N (\bm{y_i} - \bm{y'_i})^2$.
+One great benefit of this method as opposed to for instance the 
+later explained lasso method, is that $C$ is a convex twice 
+differentiable function and thus by calculus we can solve the 
+minimization problem analytically. One can show that the solution 
+is given by (1). For a thorough explanation of this identity consult
+\cite{hastie}
+\begin{equation}
+    \bm{\beta} \ = \ (X^TX)^{-1}X^T\bm{y}
+\end{equation}
+
+\subsection{Ridge regression}
+One major weakness of OLS regression is that noisy sample data can cause
+large coefficients, that is a model with large variance. One way
+to approach this problem is to impose a restriction to the magnitude of 
+our coefficients $\bm{\beta}$. Ridge regression does this by adding a
+term, also called a penality, to the cost function of OLS regression 
+an in that way penalizing large betas. The Ridge cost function is then 
+given by
+\begin{equation}
+    C(\bm{\beta}) = \sum_{i=1}^N (\bm{y_i} - \bm{y'_i})^2 + 
+    \sum_{i=1}^N \beta_i^2
+\end{equation}
+\par
+As with the case of OLS, we are in a good position with respect to solving
+this minimization problem. By Lagranges method of multiplication and the same techniques as for OLS one can show that the solution for $\beta$ is given
+by
+\begin{equation}
+    \bm{\beta} \ = \ (X^TX + \lambda I)^{-1}X^T\bm{y}
+\end{equation}
+where $\lambda$ is a real number which for high values emphazises 
+restricting the magnitude of the coefficients and for low values emphazises
+minimizing the error of the model compared to the training data.
+
+\subsection{Lasso regression}
+Just as the ridge method, lasso solves the problem of high variance 
+by adding a penality to the cost function. The difference is that 
+lasso adds the 1-norm of the betas to C instead of the 2-norm. Thus we get
+\begin{equation}
+    C(\bm{\beta}) = \sum_{i=1}^N (\bm{y_i} - \bm{y'_i})^2 + 
+    \sum_{i=1}^N |\beta_i|
+\end{equation}
+The advantage of this approach is that it tends to set coefficinets that
+corresponds to "corellating" predictors to zero. For a thoroug derivation 
+of this consult \cite{hastie}
+
+\section{Implementation}
+\subsection{Ordinary least square on the Franke function}
+
 First we have generated some test data, with the noise being very little, which we have plotted to get a more intuitive feel for how it looks. We have done this for all the models.
 \\Ordinary Least square of the Frankefunction(the same as Ridge with $\lambda=0$):
 \\ \includegraphics[scale=.7]{a-OLS}
@@ -76,7 +161,7 @@ Also the 95-percentage confidence interval of the betas:
 [-1.80168037e+01\quad -1.32155417e+01]]\\
 \end{align*}
 \\ The code and commenting for the calculations is to be found in python-file project01.py
-\subsection*{Resampling}
+\subsubsection{Resampling}
 Using our bootstrapping algorithm with a resampling of 100, degree of five, we get these values:
 \\VAR: 0.000052
 \\BIAS: 0.001933
@@ -85,7 +170,7 @@ Using our bootstrapping algorithm with a resampling of 100, degree of five, we g
 \\ 
 \\The bootsrap values aligns pretty well with our original ones.
 \clearpage
-\section*{Ridge regression}
+\subsection{Ridge regression}
 Ridge Regression with $\lambda = 0.1$
 \\Graphic plot of how it looks:
 \\ \includegraphics[scale=.7]{b-RidgeLambda01}
@@ -134,7 +219,7 @@ Also the 95-percentage confidence interval of the betas:
    [ -1.87908328e+00\quad  -1.35609332e+00]]\\
 \end{align*}
 
-\subsection*{Resampling}
+\subsubsection{Resampling}
 We can take a look at how different lambdas and different degrees of the polynomial makes a change in the R2-score and the MSE.
 \\Here is a plot to show how they develop as a function of lambda.
 \\ \includegraphics[scale=.7]{R2Ridge}
@@ -168,7 +253,7 @@ We can take a look at how different lambdas and different degrees of the polynom
 
 \clearpage
 
-\section*{Part c)}
+\subsection{Part c)}
 Lasso Regression with $\lambda = 0.01$
 \\ \includegraphics[scale=.7]{c-LassoLambda001}
 \\Ridge Test Data
@@ -216,7 +301,7 @@ Var of Beta
  [-0.    \quad      0.        ]]
 \end{align*}
 \\There is obviusly something happening with Lasso that doesn't work. Our Lasso method works great with the real data.
-\subsection*{Resampling}
+\subsubsection{Resampling}
 Bootstrap-values from degree of 1, lmb = 0.1 and 100 bootstrap-samples
 \\VAR: 0.000000
 \\BIAS: 0.239704
@@ -225,14 +310,14 @@ Bootstrap-values from degree of 1, lmb = 0.1 and 100 bootstrap-samples
 \\This was the same for all degrees and values of lambda, so I only included this.
 \clearpage
 
-\section*{Part d)}
+\subsection{Part d)}
 Imports 100x100 chunk of real data from top left corner of dataset nr.1.
 \\Plot of real data
 \\ \includegraphics[scale=.7]{100x100nor2}
 \clearpage
-\section*{Real Data}
+\subsection{Real Data}
 Repeat of the previous method and data, but with real data.
-\section*{OLS}
+\subsection{OLS}
 Plot of the data with the OLS-method of degree 5:
 \\ \includegraphics[scale=.7]{e-OLS}
 \\ OLS Score of the Real Data:
@@ -256,7 +341,7 @@ k & MSE                   & R2                 \\
    9.42227510e-17]
 \end{align*}
 
-\subsection*{Resampling}
+\subsubsection{Resampling}
 Bootstrap-values from degree of 5 and 100 bootstrap-samples
 \\VAR: 1.287057
 \\BIAS: 791.273865
@@ -265,7 +350,7 @@ Bootstrap-values from degree of 5 and 100 bootstrap-samples
 \\
 \\The MSE and R2-score are really close to our values for MSE and R2.
 
-\section*{Ridge}
+\subsection{Ridge}
 Plot of the data with the Ridge-method of degree 5, lambda = 0.1:
 \\ \includegraphics[scale=.7]{e-Ridge01}
 \\ Ridge Score of the Real Data with lambda = 0.1:
@@ -279,14 +364,14 @@ k & MSE                   & R2                 \\
 5 & 791.268452 & 0.829340
 \end{tabular}
 \end{table}
-\subsection*{Resampling}
+\subsubsection{Resampling}
 Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
 \\VAR: 1.297002
 \\BIAS: 791.285081
 \\Bootstrap mean of MSE: 792.5821
 \\Bootstrap mean of r2Score: 0.8291
 \\Can tell that MSE and R2-score is pretty similar to our computations.
-\section*{Lasso}
+\subsection{Lasso}
 Plot of the data with the Lasso-method of degree 5, lambda = 0.01:
 \\ \includegraphics[scale=.7]{e-Lassolamda001}
 \\ Lasso Score of the Real Data with lambda= 0.1:
@@ -300,7 +385,7 @@ k & MSE                   & R2                 \\
 5 & 974.391256 & 0.789844
 \end{tabular}
 \end{table}
-\subsection*{Resampling}
+\subsubsection{Resampling}
 Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
 \\VAR: 1.689048
 \\BIAS: 1239.400793
@@ -309,5 +394,5 @@ Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
 \\
 \\Here the MSE and R2score is a pretty long way from our scores when we use all our data. So the model is probably a little overfitted and we should expect our R2 to actually be lower than it is.
 \clearpage
-\section*{Conclusion}
+\section{Conclusion}
 \end{document}
