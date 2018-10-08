@@ -83,8 +83,7 @@ given by
         + \ \dots \ + \ \beta_{q-1} x_1 x_2^{k-1} \ + \ \beta_q x_2^k
     \end{split}
 \end{equation}
-Here q is the sum of the natural numbers from $1$ to $k + 1$. We call
-$p$ our \textit{model}.
+Here q is the sum of the natural numbers from $1$ to $k + 1$.
 \par
 If we let $x_{i,j}$ be the j-th entry of $\bm{x_i}$ 
 our design matrix is then given by
@@ -254,12 +253,28 @@ $k$ as a measure for the complexity of our model.
 
 \subsubsection{R2 score}
 Another measure for how well our model predicts outside the training data 
-is given by the \textit{R2Score} which is given by
+is the \textit{R2Score} which is given by
 \begin{equation}
-    R2 = 
+    R^2(\bm{y}, {p(\bm{x_1}, \bm{x_2})}) \ = \
+    1 - 
+    \frac{\sum_{i=1}^N(y_i-p(x_i))^2}{\sum_{i=1}^N(y_i-\overline{y})^2}
 \end{equation}
+where $\overline{y}$ is the mean of the responses in the sampledata, that 
+is the mean of the scalars in the vector $\bm{}y$.
 
 \subsubsection{Variance of \bm{$\beta$}}
+The final measure for model performance that we will apply is the variance 
+of the coefficients of our polynomial, $\bm{\beta}$. For OLS regression
+one can show that the covariance matrix of $\bm{\beta}$ is given by
+\begin{equation}
+    Var(\bm{\beta}) \ = \ (X^TX)^{-1} \sigma^2
+\end{equation}
+where $\sigma^2 = 1/(N - p - 1) \sum_{i=1}^N (y_i - p(x_i))$ 
+(p is the number of predictors). Thus we have an analytical expression for 
+the variance of $\bm{\beta}$.
+\par
+For ridge and lasso this is not possible and we will resort to the sample 
+variance of $\bm{\beta}$ computed by using bootstrapping.
 
 \section{Implementation}
 We have used python to implement our own classes and functions for 
@@ -270,9 +285,13 @@ are the classes OLSLinearModel, RidgeLinearModel and LassoLinearModel.
 We found the choice of implementing our three different models as classes 
 a rather intuitive and oversiktlig way of doing it. The advantage of this
 implementation is obviously that as we store most of the computations 
-done in the model, excessive comupting is not
+done in the model, excessive computing is not
 a problem. The weakness might then be excessive memory usage. This was 
-hovewer not a problem in our application of the program. 
+hovewer not a problem in our application of the program.
+\par
+We tested our classes and methods against the classes and methods in 
+scikit-learn and thus got a verification that our implmentations 
+works correctly.
 \par 
 Most of our code is in the GitHub repository. We have chosen to 
 not use the code in our report. We have, however, made a python file, 
@@ -280,6 +299,7 @@ project01.py, that provides most of our code in sequence,
 so that it is possible to follow the code that produce our testresults 
 and plots in order.
 
+\section{Analysis of the models}
 \subsection{Ordinary least square on the Franke function}
 First we have generated some test data, with the noise being very little, 
 which we have plotted to get a more intuitive feel for how it looks. 
