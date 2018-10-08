@@ -276,6 +276,18 @@ the variance of $\bm{\beta}$.
 For ridge and lasso this is not possible and we will resort to the sample 
 variance of $\bm{\beta}$ computed by using bootstrapping.
 
+\subsection{The Franke function}
+Before testing our three regression methods on real data, we evaluated it's
+performance on the function $g: \mathbb{R}^2 \rightarrow \mathbb{R}$ 
+given by
+\begin{equation}
+    \begin{split}
+    g(x,y) &= \frac{3}{4}\exp{\left(-\frac{(9x-2)^2}{4} - \frac{(9y-2)^2}{4}\right)}+\frac{3}{4}\exp{\left(-\frac{(9x+1)^2}{49}- \frac{(9y+1)}{10}\right)} \\
+&+\frac{1}{2}\exp{\left(-\frac{(9x-7)^2}{4} - \frac{(9y-3)^2}{4}\right)} -\frac{1}{5}\exp{\left(-(9x-4)^2 - (9y-7)^2\right) }.
+    \end{split}
+\end{equation}
+We call this function the \textit{Franke function}.
+
 \section{Implementation}
 We have used python to implement our own classes and functions for 
 fitting and evaluating models as described in section 2.  
@@ -597,8 +609,19 @@ Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
 In conclusion, from what we can see, the Lasso model fitted our data the worst. Our scores from OLS and Ridge did pretty evenly and had very good scores. The bootstrap also validated our scores. To compare, our Lasso bootstrap scores did much worse compared to the original R2 and MSE-scores.
 \\To illustrate we can look at the R2-score between Ridge and Lasso with lambda = 0.1. These were both scores from our bootstrap.
 \\ \includegraphics[scale=.7]{R2realdata1e-1}
-\\We can tell that both Lasso and Ridge does pretty even, but Ridge beats Lasso consistantly. This is to be expected though, but the benefit of using Lasso is usually the lower variance. We can however see that the variance and the bias is both significantly higher then Ridge, so there is really no benefit of using Lasso in this particular case.
-
+\\We can tell that both Lasso and Ridge does pretty even, but Ridge beats Lasso consistently. This is to be expected though, but the benefit of using Lasso is usually the lower variance. We can however see that the variance and the bias is both significantly higher than Ridge, so there is really no benefit of using Lasso in this particular case.
+\par
+The process of investigating which linear regression methods performs
+best on our data sets certainly has been interesting 
+and if time allowed it would be interesting to look into using 
+other functions than polynomials for our model, 
+for instance Fourier series.
+\par
+Also if time allowed we would like to use some more time on structuring 
+the classes and functions developed in python to make it more 
+intuitive and easy to use. It would also
+have been interesting to develope our own code for fitting the model
+using lasso.
 \bibliography{references}{}
 \bibliographystyle{plain}
 \end{document}
