@@ -67,9 +67,9 @@ vector $\bm{y} \in \mathbb{R}^N$.
 Further we assume the true relationship between the predictors and 
 response to be:
 \begin{equation}
-    y = f(x_1, x_2) + \epsilon
+    y = f(x_1, x_2) + \eta
 \end{equation}
-where $\epsilon$ is a stocastic variable which is normally distributed 
+where $\eta$ is a stocastic variable which is normally distributed 
 around 0 and $f$ is some function. 
 We will try to model the function $f$ by a polynomial $p$ of degree $k$ 
 given by 
@@ -160,14 +160,14 @@ by adding a penality to the cost function. The difference is that
 lasso adds the 1-norm of $\bm{\beta}$ to $C$ instead of the 2-norm. 
 Thus we get
 \begin{equation}
-    C(\bm{\beta}) = \sum_{i=1}^N (\bm{y_i} - \bm{y'_i})^2 + 
+    C(\bm{\beta}) = \sum_{i=1}^N (y_i - (X\bm{\beta})_i)^2 + 
     \sum_{i=1}^N |\beta_i|
 \end{equation}
 The advantage of this approach over ridge 
 is that it tends to set coefficients that are irrelevant to zero instead
 of very small values. One might then end up with a smarter model with 
 fewer predictors than one started out with. For a thorough explanation 
-of this consult \cite{hastie}. 
+of this consult \cite{lasso}. 
 The draw back however is that we no longer have an analytical solution for
 $\bm{\beta}$ and have to resort to numerical methods to minimize $C$. 
 
@@ -245,7 +245,7 @@ of the MSE and is given by
 \begin{equation}
     MSE \ = \ \sigma^2 \ + \ Bias^2 \ + \ Var
 \end{equation}
-For a thorough explanation of this decomposition consult \cite{hastie}
+For a thorough explanation of this decomposition consult \cite{MSEdecomposition}
 \par
 In the context of this text the degree of our polynomial $p$ 
 is a good measure of it's complexity and we will thus use 
@@ -279,7 +279,9 @@ variance of $\bm{\beta}$ computed by using bootstrapping.
 \section{Implementation}
 We have used python to implement our own classes and functions for 
 fitting and evaluating models as described in section 2.  
-The complete code can be found in \cite{hastie}. The main part of the code
+The complete code can be found at the repository 
+\url{https://github.com/jonabaa/Project1/tree/master/Code}. 
+The main part of the code
 are the classes OLSLinearModel, RidgeLinearModel and LassoLinearModel. 
 \par
 We found the choice of implementing our three different models as classes 
@@ -293,7 +295,7 @@ We tested our classes and methods against the classes and methods in
 scikit-learn and thus got a verification that our implmentations 
 works correctly.
 \par 
-Most of our code is in the GitHub repository. We have chosen to 
+All of our code is in the GitHub repository. We have chosen to 
 not use the code in our report. We have, however, made a python file, 
 project01.py, that provides most of our code in sequence, 
 so that it is possible to follow the code that produce our testresults 
@@ -597,4 +599,6 @@ In conclusion, from what we can see, the Lasso model fitted our data the worst. 
 \\ \includegraphics[scale=.7]{R2realdata1e-1}
 \\We can tell that both Lasso and Ridge does pretty even, but Ridge beats Lasso consistantly. This is to be expected though, but the benefit of using Lasso is usually the lower variance. We can however see that the variance and the bias is both significantly higher then Ridge, so there is really no benefit of using Lasso in this particular case.
 
+\bibliography{references}{}
+\bibliographystyle{plain}
 \end{document}
