@@ -200,7 +200,7 @@ for i in range(1, 6):
 #s = np.c_[x, y]
 #plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
-
+"""
 #--Ridge--
 print('Ridge Real Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
@@ -221,10 +221,12 @@ print(Ridge_CI)
 
 #Bootstrap
 for i in range(1, 6):
-    for j in [0.1, 1, 10]:
+    for j in [0.1]:
         print('Bootstrap-values from degree of %s, lmb = %s and 100 bootstrap-samples'%(i, j))
         BootstrapRidge(x1, x2, y, i, j, 100)
         print()
+"""
+
 """
 #--Lasso--
 print('Lasso Real Data lmb = 0.1')
@@ -255,3 +257,33 @@ for i in range(1, 6):
 
 # Basicly repeat of a-c just with real data
 """
+
+# Conclusion
+
+# Plot R2-score of real data
+klist = [1,2,3,4,5]
+RidgeR2 = []
+LassoR2 = []
+RidgeMSE = []
+LassoMSE = []
+
+
+for i in klist:
+    for j in [0.1]:
+        RidgeR2.append(BootstrapRidge(x1, x2, y, i, j, 40)[3])
+        LassoR2.append(BootstrapLasso(x1,x2,y,i,j,40)[3])
+        RidgeMSE.append(BootstrapRidge(x1, x2, y, i, j, 40)[2])
+        LassoMSE.append(BootstrapLasso(x1,x2,y,i,j,40)[2])
+
+plt.plot(klist, RidgeR2)
+plt.plot(klist, LassoR2)
+plt.ylabel('R2-score')
+plt.xlabel('degree')
+plt.legend(('Ridge', 'Lasso'))
+plt.show()
+plt.plot(klist,RidgeMSE)
+plt.plot(klist, LassoMSE)
+plt.ylabel('MSE')
+plt.xlabel('degree')
+plt.legend(('Ridge', 'Lasso'))
+plt.show()
