@@ -22,10 +22,10 @@
 %All of the plots of the models are done with degree equals 5.
 
 \section{Introduction}
-A common problem in inferential statistics is to investigate how one 
-stocastic variable depends on another stocastic variable. That is, one
-wishes to find a model that given the outcome of one stocastic variable 
-estimates the outcome of another stocastic variable.
+A common problem in inferential statistics is to investigate dependencies
+among random variables. That is, given the outcome of one or more random 
+variables, one wishes to develop a model that estimates the outcome of 
+another random variable.
 A widely used technique for developing such a model is a method called 
 linear regression. In this project 
 we aim to evaluate the performance of three different types of 
@@ -35,7 +35,7 @@ lasso regression.
 \par First we evaluate our methods on a known function, that is we know 
 the relationship between our variables. Then we apply the same methods 
 to evaluate the performance of our methods on a real data set where 
-we don’t know the underlying relationship (if there is any at all).
+we don’t know the underlying relationship.
 %In this project we were to analyse different sets of data; test-data 
 %from the Franke-function and real data, using different linear 
 %regression models. The main goal of the project was to evaulate the 
@@ -46,13 +46,13 @@ we don’t know the underlying relationship (if there is any at all).
 The general idea of linear regression is to assume that the relationship 
 between your dependent and independent variables is given by some function 
 (which is linear in it's coefficients)
-and then try to estimate this function, also called a model, 
+and then try to estimate this function, also called a \textit{model}, 
 by minimizing some error term. As the scope of this text is to evaluate the
-goodnes of this method in some special cases rather than explaining it 
-in general, we are not going to induldge in the derivation of this method
-but rather assume that the reader is familiar with the basics of this
-concept. However we will need to establish some context and 
-notation.
+performance of this method in some special cases rather than explaining it 
+in general, we are not going to induldge in the full derivation 
+of this method but rather assume that the reader is familiar with the 
+basics of this concept. However we will need to establish some context, 
+notation and assumptions.
 \par
 In our case we are given two independent variables, also called 
 \textit{predictors}, 
@@ -165,44 +165,122 @@ Thus we get
     \sum_{i=1}^N |\beta_i|
 \end{equation}
 The advantage of this approach over ridge 
-is that it tends to set coefficients that are irellevant to zero instead
+is that it tends to set coefficients that are irrelevant to zero instead
 of very small values. One might then end up with a smarter model with 
 fewer predictors than one started out with. For a thorough explanation 
 of this consult \cite{hastie}. 
 The draw back however is that we no longer have an analytical solution for
 $\bm{\beta}$ and have to resort to numerical methods to minimize $C$. 
 
-\subsection{Measure of goodnesssssssss}
-\subsubsection{Decomposition of MSE}
-The standard way of measruing how well
-
-\subsubsection{R2 score}
-
-\subsubsection{Variance, and more parameters?}
-
+\subsection{Performance measures}
+\subsubsection{The mean squared error}
+An intuitive way of measuring the performance of a model would be to try
+it out on real data (which is not fitting data) and compute some sort of 
+a mean value of the errors. This is in fact also the standard way of doing
+it! The \textit{mean squared error}, or just 
+\textit{MSE}, is defined by 
+\begin{equation}
+    MSE(\bm{y},p(\bm{x})) = 1/N \sum_{i=1}^N (y_i - p(x_i))^2
+\end{equation}
+and gives us a measure of how good the model predicts on new data.
+\subsubsection{Resampling}
+Usually when one have fitted a model to the given sampledata, the task
+of obtaining new sample data for testing might
+be hard, expensive or even impossible. Since the MSE and most other 
+error measures don't give us any 
+new information if we use it on the same data as we used for fitting, 
+a technique called \textit{resampling} is often applied. 
+\par
+The general idea of resampling is to divide
+your sample data into two parts, \textit{trainingdata} and 
+\textit{testdata}. The trainingdata is used to fit your 
+model while the testdata is used to evaluate the model by computing 
+different statistical estimators such as the MSE.
 
 \subsubsection{Resampling using bootstrapping}
-\par convergence to the real parameteres using bootstrap
+There are many ways to perform the task of resampling.
+Crossvalidation, jackknife and bootstrapping are common ones. In this
+text we will discuss and use bootstrapping in our evaluation of our 
+regression methods. 
+\par
+The principle of bootstrapping is to obtain your training data by 
+randomly drawing $N$ datapoints 
+from your sample data with replacement $B$ times. $B$ is a pretty large
+number, usually 1000 or more or as much as your computer can handle. 
+In this way one obtains $B$ sets of training data for fitting. 
+The huge advantage with bootstrapping is that you don't have to know 
+the underlying probability
+distribution of your population. In addition it can be shown that when
+$B$ tends to infinity your bottstrapestimators tend to the real value of
+the parameter.
+
+\subsubsection{Decomposing the MSE}
+When fitting a model to a set of data one will always encounter 
+the balancing act of determining the complexity of the model: Of course
+one wants a high complexity in order to get a good fit to the 
+training data. The drawback with this is however that as you crank
+up the complexity of your model, it will usually
+start to predict worse on the test data at some point. 
+This problem is called \textit{overfitting}. 
+On the contrary as you lower the complexity of the model it's predictions
+on the training data will get worse, and if you go to far you get the 
+problem that the model lacks the flexibility to give good predictions on 
+any data. This problem is called \textit{underfitting}.
+\par
+Two statistical parameters that are very helpful in the above mentioned 
+balancing act are the \textit{variance} and \textit{bias} of your model. 
+If we let $p_j$ be the model fitted to bootstrap sample $j$, 
+the bias squared is given by (11), while the variance is given by (12).
+\begin{equation}
+    Bias^2 \ = \ 1/N \sum_{i=1}^N (y_i - 1/B \sum_{j=1}^B p_j(x_i))^2
+\end{equation}
+\begin{equation}
+    Var \ = \ 1/N \sum_{i=1}^N 1/B \sum_{j=1}^B (p_j(x_i) 
+    - 1/B \sum p_j(x_i))
+\end{equation}
+A high variance indicates overfitting, while a high bias indicates
+underfitting. If we let $\sigma^2$ be the variance of the true probability
+distribution one can show that there's a connection between the MSE,
+Bias squared, variance and true variance. This is called the decomposition
+of the MSE and is given by
+\begin{equation}
+    MSE \ = \ \sigma^2 \ + \ Bias^2 \ + \ Var
+\end{equation}
+For a thorough explanation of this decomposition consult \cite{hastie}
+\par
+In the context of this text the degree of our polynomial $p$ 
+is a good measure of it's complexity and we will thus use 
+$k$ as a measure for the complexity of our model.
+
+\subsubsection{R2 score}
+Another measure for how well our model predicts outside the training data 
+is given by the \textit{R2Score} which is given by
+\begin{equation}
+    R2 = 
+\end{equation}
+
+\subsubsection{Variance of \bm{$\beta$}}
 
 \section{Implementation}
-We implemented the process described in section 2 using python. 
+We have used python to implement our own classes and functions for 
+fitting and evaluating models as described in section 2.  
 The complete code can be found in \cite{hastie}. The main part of the code
 are the classes OLSLinearModel, RidgeLinearModel and LassoLinearModel. 
-
+\par
 We found the choice of implementing our three different models as classes 
 a rather intuitive and oversiktlig way of doing it. The advantage of this
-implementation is obviously that as we store most of the data in the model
-computing the same numbers over again and thus excessive comupting is not
+implementation is obviously that as we store most of the computations 
+done in the model, excessive comupting is not
 a problem. The weakness might then be excessive memory usage. This was 
-hovewer not a problem in our application of the program.
-
-\par Most of our code is in the GitHub repository. We have chosen to 
+hovewer not a problem in our application of the program. 
+\par 
+Most of our code is in the GitHub repository. We have chosen to 
 not use the code in our report. We have, however, made a python file, 
 project01.py, that provides most of our code in sequence, 
 so that it is possible to follow the code that produce our testresults 
 and plots in order.
-\subsection{Ordinary least square on the Franke function}
 
+\subsection{Ordinary least square on the Franke function}
 First we have generated some test data, with the noise being very little, 
 which we have plotted to get a more intuitive feel for how it looks. 
 We have done this for all the models.
