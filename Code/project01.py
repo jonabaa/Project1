@@ -39,7 +39,7 @@ def MSEandR2table(x1, x2, y, RegMethod, krange, lmb=0.1):
 
 # PROJECT 01 SOLUTIONS
 x1, x2, y = CreateSampleData(1000, 0.01)
-"""
+
 # Part a)-------------------------
 # Ordinary Least Square on the Franke function
 # with resampling
@@ -101,7 +101,7 @@ for i in range(1, 6):
         OLSboots = BootstrapRidge(x1, x2, y, i, j, 100)
         print()
 
-"""
+
 
 #plot_function_2D(5, rbeta1, 1, 1, 'b-RidgeLambda01')
 
@@ -109,7 +109,7 @@ for i in range(1, 6):
 # Lasso Regression on the Franke function
 # with resampling
 
-"""
+
 print('Lasso Test Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,LassoLinearModel, 5))
 print()
@@ -147,7 +147,7 @@ for i in range(1, 6):
 
 # This splits the data into a chunk 100x100 up in the right corner
 
-"""
+
 #----------------------#
 #                      #
 #     REAL DATA        #
@@ -169,7 +169,7 @@ x1, x2, y = tifread(mlimit=m, nlimit=n, filename='data_files/SRTM_data_Norway_2.
 # OLS, Ridge and Lasso regression with resampling
 
 #--OLS
-"""
+
 
 print('OLS Real Data')
 print(MSEandR2table(x1,x2,y,OLSLinearModel, 5))
@@ -194,13 +194,10 @@ for i in range(1, 6):
     OLSboots = BootstrapRidge(x1, x2, y, i, 0, 100)
     print()
 #plot_function_2D(5, obetareal, m, n, 'e-OLS')
-"""
-"""
-"""
+
 #s = np.c_[x, y]
 #plotscores(RidgeReg, s,'RidgeReal' ,lambdasteps=5)
 
-"""
 #--Ridge--
 print('Ridge Real Data lmb = 0.1')
 print(MSEandR2table(x1,x2,y,RidgeLinearModel, 5))
@@ -256,7 +253,7 @@ for i in range(1, 6):
 #plot_function_2D(5, lbetareal, m, n, 'e-Lassolamda001')
 
 # Basicly repeat of a-c just with real data
-"""
+
 
 # Conclusion
 
