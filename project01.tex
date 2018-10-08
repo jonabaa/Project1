@@ -592,6 +592,8 @@ Bootstrap-values from degree of 5, lmb = 10 and 100 bootstrap-samples
 \section{Conclusion}
 
 \par
-Outlooks, further investigation, etc.
+In conclusion, from what we can see, the Lasso model fitted our data the worst. Our scores from OLS and Ridge did pretty evenly and had very good scores. The bootstrap also validated our scores. To illustrate we can look at the R2-score between Ridge and Lasso with lambda = 0.1. These were both scores from our bootstrap.
+\\ \includegraphics[scale=.7]{R2realdata1e-1}
+\\We can tell that both Lasso and Ridge does pretty even, but Ridge beats Lasso consistantly. This is to be expected though, but the benefit of using Lasso is usually the lower variance. We can however see that the variance and the bias is both significantly higher then Ridge, so there is really no benefit of using Lasso in this particular case.
 
 \end{document}
